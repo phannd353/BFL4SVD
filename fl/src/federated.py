@@ -1,0 +1,150 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import numpy as np
+import torch
+import torch.nn as nn
+from flwr.app import Context
+from torch_geometric.loader import DataLoader
+
+from src.data import load_json_records, records_to_graphs
+from src.model import TokenGraphRGCN
+from src.reproducibility import set_seed
+
+
+def config_value[T](context: Context, name: str, default: T) -> T:
+    """Read per-client values from node config, then shared run config."""
+
+    if name in context.node_config:
+        value = context.node_config[name]
+    else:
+        value = context.run_config.get(name, default)
+
+    if isinstance(default, bool):
+        return bool(value)
+    if isinstance(default, int):
+        return int(value)
+    if isinstance(default, float):
+        return float(value)
+    return value
+
+
+def load_vocabulary(path: str) -> dict[str, int]:
+    with Path(path).open("r", encoding="utf-8") as file:
+        vocabulary = json.load(file)
+    if not isinstance(vocabulary, dict) or not vocabulary:
+        raise ValueError("Vocabulary JSON must contain a non-empty object.")
+    try:
+        vocabulary = {str(token): int(index) for token, index in vocabulary.items()}
+    except (TypeError, ValueError) as exc:
+        raise ValueError("Vocabulary values must be integer IDs.") from exc
+    if vocabulary.get("<PAD>") != 0 or vocabulary.get("<UNK>") != 1:
+        raise ValueError("Vocabulary must reserve <PAD>=0 and <UNK>=1.")
+    return vocabulary
+
+
+def create_model(
+    vocabulary_size: int,
+    embedding_dim: int,
+    hidden_dim: int,
+    dropout: float,
+) -> TokenGraphRGCN:
+    return TokenGraphRGCN(
+        vocabulary_size=vocabulary_size,
+        embedding_dim=embedding_dim,
+        hidden_dim=hidden_dim,
+        dropout=dropout,
+        num_relations=8,
+    )
+
+
+def model_to_ndarrays(model: nn.Module) -> list[np.ndarray]:
+    return [value.detach().cpu().numpy() for value in model.state_dict().values()]
+
+
+def build_client_loaders(
+    train_data_path: str,
+    validation_data_path: str,
+    vocabulary: dict[str, int],
+    batch_size: int,
+    max_tokens: int,
+    context_window: int,
+    normalize_tokens: bool,
+    structural_edges: bool,
+    ast_edges: bool,
+    data_flow_edges: bool,
+) -> tuple[DataLoader, DataLoader]:
+    train_records = load_json_records(train_data_path)
+    validation_records = load_json_records(validation_data_path)
+    graph_kwargs = {
+        "vocabulary": vocabulary,
+        "max_tokens": max_tokens,
+        "context_window": context_window,
+        "normalize_tokens": normalize_tokens,
+        "structural_edges": structural_edges,
+        "ast_edges": ast_edges,
+        "data_flow_edges": data_flow_edges,
+    }
+    train_graphs = records_to_graphs(train_records, **graph_kwargs)
+    validation_graphs = records_to_graphs(validation_records, **graph_kwargs)
+    return (
+        DataLoader(train_graphs, batch_size=batch_size, shuffle=True),
+        DataLoader(validation_graphs, batch_size=batch_size, shuffle=False),
+    )
+
+
+def build_criterion(device: torch.device, use_class_weights: bool, loader: DataLoader):
+    if not use_class_weights:
+        return nn.CrossEntropyLoss()
+    labels = torch.cat([batch.y.view(-1) for batch in loader])
+    counts = torch.bincount(labels, minlength=2).float()
+    if torch.any(counts == 0):
+        raise ValueError("A client needs both classes to use class weights.")
+    weights = (len(labels) / (2.0 * counts)).to(device)
+    return nn.CrossEntropyLoss(weight=weights)
+
+
+def create_local_state(
+    context: Context,
+    train_data_path: str,
+    validation_data_path: str,
+):
+    set_seed(config_value(context, "seed", 42))
+    vocabulary = load_vocabulary(
+        config_value(context, "vocabulary", "shared_vocabulary.json")
+    )
+    model = create_model(
+        vocabulary_size=len(vocabulary),
+        embedding_dim=config_value(context, "embedding_dim", 128),
+        hidden_dim=config_value(context, "hidden_dim", 128),
+        dropout=config_value(context, "dropout", 0.30),
+    )
+    device = torch.device(
+        config_value(
+            context,
+            "device",
+            "cuda" if torch.cuda.is_available() else "cpu",
+        )
+    )
+    model.to(device)
+
+    train_loader, validation_loader = build_client_loaders(
+        train_data_path=train_data_path,
+        validation_data_path=validation_data_path,
+        vocabulary=vocabulary,
+        batch_size=config_value(context, "batch_size", 32),
+        max_tokens=config_value(context, "max_tokens", 512),
+        context_window=config_value(context, "context_window", 2),
+        normalize_tokens=config_value(context, "normalize_tokens", False),
+        structural_edges=config_value(context, "structural_edges", True),
+        ast_edges=config_value(context, "ast_edges", False),
+        data_flow_edges=config_value(context, "data_flow_edges", False),
+    )
+    criterion = build_criterion(
+        device,
+        config_value(context, "class_weights", False),
+        train_loader,
+    )
+    return model, device, train_loader, validation_loader, criterion

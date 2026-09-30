@@ -1,0 +1,7 @@
+__pycache__
+
+# Keep data/raw/dataset.json, but ignore everything else in data/raw
+data/*
+!data/raw
+data/raw/*
+!data/raw/dataset.json
