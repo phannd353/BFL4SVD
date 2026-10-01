@@ -335,17 +335,34 @@ partitions as-is. Do not split these files again locally: doing so needlessly
 discards training records and evaluates on only a fraction of the validation
 set.
 
-The dataset splitter reserves separate stratified server validation and test
-sets. Regenerate both modes before running the updated server:
+The dataset splitter reserves 10% each for server validation and test. The
+remaining 80% is split within each client into 87.5% train, 6.25% validation,
+and 6.25% test, giving FL the same 70% total training share as the centralized
+baseline. Regenerate both modes before running the updated server:
 
 ```bash
 python3 split_federated_dataset.py --mode iid
 python3 split_federated_dataset.py --mode non-iid
 ```
 
+Build each mode's shared vocabulary from client training records only, matching
+the baseline's train-only vocabulary and avoiding validation/test leakage:
+
+```bash
+python3 export_vocabulary.py \
+  --data data/federated/iid/client_*/train.json \
+  --output data/federated/iid/vocabulary.json
+python3 export_vocabulary.py \
+  --data data/federated/non-iid/client_*/train.json \
+  --output data/federated/non-iid/vocabulary.json
+```
+
 The server now selects and saves the global model with the highest server
-validation MCC, then evaluates that selected checkpoint on `server/test.json`
-once after training. Do not use that final test result to tune the run.
+validation-selected threshold metric, then evaluates that checkpoint on
+`server/test.json` once after training. The defaults now match the centralized
+RGCN baseline's context window (4), weighted loss, and macro-F1 threshold
+selection. The threshold and selected round are included in the checkpoint.
+Do not use the final test result to tune the run.
 
 FedProx is enabled by default (`proximal_mu = 0.001`) to limit client updates
 drifting away from the current global model. Start with one local epoch and more
@@ -355,10 +372,14 @@ overfitting and client drift:
 ```bash
 flwr run . --stream \
   --run-config 'mode="iid"' \
+  --run-config 'vocabulary="data/federated/iid/vocabulary.json"' \
   --run-config 'local_epochs=1' \
-  --run-config 'rounds=20' \
-  --run-config 'learning_rate=0.0001' \
-  --run-config 'proximal_mu=0.001'
+  --run-config 'rounds=30' \
+  --run-config 'learning_rate=0.001' \
+  --run-config 'proximal_mu=0.001' \
+  --run-config 'context_window=4' \
+  --run-config 'class_weights=true' \
+  --run-config 'threshold_metric="macro_f1"'
 ```
 
 Compare IID and non-IID runs with the same seed and hyperparameters. Choose

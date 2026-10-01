@@ -54,7 +54,7 @@ def split_local_dataset(
     records: list[dict],
     rng: random.Random,
 ) -> dict[str, list[dict]]:
-    """Split a client dataset into 80% train, 10% validation, 10% test."""
+    """Split the client pool into 87.5% train, 6.25% validation, 6.25% test."""
 
     by_class = {
         0: [record for record in records if record["target"] == 0],
@@ -65,7 +65,7 @@ def split_local_dataset(
 
     splits = {"train": [], "validation": [], "test": []}
     for class_records in by_class.values():
-        counts = allocate_counts(len(class_records), (0.8, 0.1, 0.1))
+        counts = allocate_counts(len(class_records), (0.875, 0.0625, 0.0625))
         start = 0
         for split_name, count in zip(splits, counts):
             splits[split_name].extend(class_records[start : start + count])
@@ -80,7 +80,7 @@ def split_server_records(
     records: list[dict],
     rng: random.Random,
 ) -> tuple[list[dict], list[dict], list[dict]]:
-    """Reserve stratified 10% server validation and test sets."""
+    """Reserve stratified 10% server validation/test and 80% for clients."""
 
     by_class = {
         0: [record for record in records if record["target"] == 0],

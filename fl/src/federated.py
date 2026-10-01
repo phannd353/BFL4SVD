@@ -136,7 +136,7 @@ def create_local_state(
         vocabulary=vocabulary,
         batch_size=config_value(context, "batch_size", 32),
         max_tokens=config_value(context, "max_tokens", 512),
-        context_window=config_value(context, "context_window", 2),
+        context_window=config_value(context, "context_window", 4),
         normalize_tokens=config_value(context, "normalize_tokens", False),
         structural_edges=config_value(context, "structural_edges", True),
         ast_edges=config_value(context, "ast_edges", False),
@@ -144,7 +144,7 @@ def create_local_state(
     )
     criterion = build_criterion(
         device,
-        config_value(context, "class_weights", False),
+        config_value(context, "class_weights", True),
         train_loader,
     )
     return model, device, train_loader, validation_loader, criterion

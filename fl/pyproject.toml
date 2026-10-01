@@ -32,7 +32,7 @@ clientapp = "fl_client:app"
 
 [tool.flwr.app.config]
 vocabulary = "data/federated/vocabulary.json"
-rounds = 1
+rounds = 30
 min_clients = 2
 local_epochs = 1
 batch_size = 32
@@ -43,11 +43,12 @@ embedding_dim = 128
 hidden_dim = 128
 dropout = 0.3
 max_tokens = 512
-context_window = 2
+context_window = 4
 structural_edges = true
 ast_edges = false
 data_flow_edges = false
-class_weights = false
+class_weights = true
+threshold_metric = "macro_f1"
 seed = 42
 mode = 'non-iid'
 

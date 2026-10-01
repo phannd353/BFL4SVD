@@ -10,14 +10,23 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Create the shared vocabulary distributed to FL clients."
     )
-    parser.add_argument("--data", required=True)
+    parser.add_argument(
+        "--data",
+        required=True,
+        nargs="+",
+        help="One or more JSON record files. For FL, pass client train.json files only.",
+    )
     parser.add_argument("--output", required=True)
     parser.add_argument("--max-vocab-size", type=int, default=20000)
     parser.add_argument("--min-frequency", type=int, default=1)
     parser.add_argument("--normalize-tokens", action="store_true")
     args = parser.parse_args()
 
-    records = load_json_records(args.data)
+    records = [
+        record
+        for data_path in args.data
+        for record in load_json_records(data_path)
+    ]
     vocabulary = build_vocabulary(
         records,
         max_vocab_size=args.max_vocab_size,

@@ -339,7 +339,13 @@ Confusion matrix:
 
 ## Federated learning
 
+### v1
+
 ```bash
+flwr federation simulation-config @none/default --num-supernodes 5
+
+export FLWR_DISABLE_RUNTIME_DEPENDENCY_INSTALLATION=1
+
 flwr run . --stream --run-config "local_epochs=10" --run-config "rounds=5" --run-config 'mode="non-iid"'
 
 Final results:
@@ -465,4 +471,160 @@ INFO :      	 5: { 'accuracy': '5.4392e-01',
 INFO :      	      'auc': '5.0000e-01',
 INFO :      	      'loss': '6.8929e-01',
 INFO :      	      'mcc': '0.0000e+00'}}
+```
+
+### v2
+
+```bash
+flwr run . --stream --run-config "local_epochs=10" --run-config "rounds=5" --run-config 'mode="non-iid"'
+
+INFO :      aggregate_train: Received 5 results and 0 failures
+INFO :      	└──> Aggregated MetricRecord: {'train-loss': 0.6230113275678563}
+INFO :      configure_evaluate: Sampled 5 nodes (out of 5)
+INFO :      aggregate_evaluate: Received 5 results and 0 failures
+INFO :      	└──> Aggregated MetricRecord: {'loss': 0.685207093966623, 'accuracy': 0.572930955647005, 'mcc': 0.12724858126706703, 'auc': 0.5929516135872811}
+INFO :      Global evaluation
+INFO :      	└──> MetricRecord: {'accuracy': 0.5567349926793558, 'loss': 0.6961838046244262, 'mcc': 0.07402285744344028, 'auc': 0.5763236434652801}
+INFO :
+INFO :      Strategy execution finished in 2495.03s
+INFO :
+INFO :      Final results:
+INFO :
+INFO :      	Global Arrays:
+INFO :      		ArrayRecord (11.688 MB)
+INFO :
+INFO :      	Aggregated ClientApp-side Train Metrics:
+INFO :      	{ 1: {'train-loss': '6.6899e-01'},
+INFO :      	  2: {'train-loss': '6.6450e-01'},
+INFO :      	  3: {'train-loss': '6.5106e-01'},
+INFO :      	  4: {'train-loss': '6.4193e-01'},
+INFO :      	  5: {'train-loss': '6.2301e-01'}}
+INFO :
+INFO :      	Aggregated ClientApp-side Evaluate Metrics:
+INFO :      	{ 1: { 'accuracy': '5.4412e-01',
+INFO :      	       'auc': '5.7205e-01',
+INFO :      	       'loss': '6.8904e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  2: { 'accuracy': '5.6882e-01',
+INFO :      	       'auc': '5.7665e-01',
+INFO :      	       'loss': '6.8055e-01',
+INFO :      	       'mcc': '1.2062e-01'},
+INFO :      	  3: { 'accuracy': '5.7202e-01',
+INFO :      	       'auc': '5.7354e-01',
+INFO :      	       'loss': '6.7556e-01',
+INFO :      	       'mcc': '1.2243e-01'},
+INFO :      	  4: { 'accuracy': '5.6927e-01',
+INFO :      	       'auc': '5.7684e-01',
+INFO :      	       'loss': '6.7804e-01',
+INFO :      	       'mcc': '1.1077e-01'},
+INFO :      	  5: { 'accuracy': '5.7293e-01',
+INFO :      	       'auc': '5.9295e-01',
+INFO :      	       'loss': '6.8521e-01',
+INFO :      	       'mcc': '1.2725e-01'}}
+INFO :
+INFO :      	ServerApp-side Evaluate Metrics:
+INFO :      	{ 0: { 'accuracy': '4.5608e-01',
+INFO :      	       'auc': '5.4029e-01',
+INFO :      	       'loss': '7.1999e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  1: { 'accuracy': '5.4392e-01',
+INFO :      	       'auc': '5.5279e-01',
+INFO :      	       'loss': '6.8938e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  2: { 'accuracy': '5.5820e-01',
+INFO :      	       'auc': '5.5985e-01',
+INFO :      	       'loss': '6.8412e-01',
+INFO :      	       'mcc': '8.6229e-02'},
+INFO :      	  3: { 'accuracy': '5.6003e-01',
+INFO :      	       'auc': '5.5804e-01',
+INFO :      	       'loss': '6.8410e-01',
+INFO :      	       'mcc': '8.7497e-02'},
+INFO :      	  4: { 'accuracy': '5.5820e-01',
+INFO :      	       'auc': '5.6448e-01',
+INFO :      	       'loss': '6.8911e-01',
+INFO :      	       'mcc': '8.0515e-02'},
+INFO :      	  5: { 'accuracy': '5.5673e-01',
+INFO :      	       'auc': '5.7632e-01',
+INFO :      	       'loss': '6.9618e-01',
+INFO :      	       'mcc': '7.4023e-02'}}
+INFO :
+Selected round: 3 (highest server validation MCC)
+Final server test metrics: {'loss': 0.676212732386973, 'accuracy': 0.5625915080527086, 'precision': 0.639344262295082, 'recall': 0.09390048154093097, 'f1': 0.16375087473757874, 'macro_f1': 0.43379613129691824, 'mcc': 0.09859158284115266, 'auc': 0.5641916852636377}
+```
+
+```bash
+flwr run . --stream --run-config "local_epochs=10" --run-config "rounds=5" --run-config 'mode="iid"'
+
+INFO :      aggregate_train: Received 5 results and 0 failures
+INFO :      	└──> Aggregated MetricRecord: {'train-loss': 0.6893115557615548}
+INFO :      configure_evaluate: Sampled 5 nodes (out of 5)
+INFO :      aggregate_evaluate: Received 5 results and 0 failures
+INFO :      	└──> Aggregated MetricRecord: {'loss': 0.6892963250114887, 'accuracy': 0.5438756855575868, 'mcc': 0.0, 'auc': 0.48589349239553425}
+INFO :      Global evaluation
+INFO :      	└──> MetricRecord: {'accuracy': 0.5439238653001464, 'loss': 0.689287145263454, 'mcc': 0.0, 'auc': 0.49478519688305406}
+INFO :
+INFO :      Strategy execution finished in 2449.39s
+INFO :
+INFO :      Final results:
+INFO :
+INFO :      	Global Arrays:
+INFO :      		ArrayRecord (11.688 MB)
+INFO :
+INFO :      	Aggregated ClientApp-side Train Metrics:
+INFO :      	{ 1: {'train-loss': '6.8936e-01'},
+INFO :      	  2: {'train-loss': '6.8931e-01'},
+INFO :      	  3: {'train-loss': '6.8931e-01'},
+INFO :      	  4: {'train-loss': '6.8931e-01'},
+INFO :      	  5: {'train-loss': '6.8931e-01'}}
+INFO :
+INFO :      	Aggregated ClientApp-side Evaluate Metrics:
+INFO :      	{ 1: { 'accuracy': '5.4388e-01',
+INFO :      	       'auc': '4.7343e-01',
+INFO :      	       'loss': '6.8963e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  2: { 'accuracy': '5.4388e-01',
+INFO :      	       'auc': '4.7266e-01',
+INFO :      	       'loss': '6.8930e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  3: { 'accuracy': '5.4388e-01',
+INFO :      	       'auc': '5.2327e-01',
+INFO :      	       'loss': '6.8929e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  4: { 'accuracy': '5.4388e-01',
+INFO :      	       'auc': '4.8589e-01',
+INFO :      	       'loss': '6.8930e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  5: { 'accuracy': '5.4388e-01',
+INFO :      	       'auc': '4.8589e-01',
+INFO :      	       'loss': '6.8930e-01',
+INFO :      	       'mcc': '0.0000e+00'}}
+INFO :
+INFO :      	ServerApp-side Evaluate Metrics:
+INFO :      	{ 0: { 'accuracy': '5.4392e-01',
+INFO :      	       'auc': '4.8106e-01',
+INFO :      	       'loss': '7.1558e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  1: { 'accuracy': '5.4392e-01',
+INFO :      	       'auc': '4.7138e-01',
+INFO :      	       'loss': '6.8963e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  2: { 'accuracy': '5.4392e-01',
+INFO :      	       'auc': '4.7946e-01',
+INFO :      	       'loss': '6.8929e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  3: { 'accuracy': '5.4392e-01',
+INFO :      	       'auc': '5.1282e-01',
+INFO :      	       'loss': '6.8928e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  4: { 'accuracy': '5.4392e-01',
+INFO :      	       'auc': '4.9479e-01',
+INFO :      	       'loss': '6.8929e-01',
+INFO :      	       'mcc': '0.0000e+00'},
+INFO :      	  5: { 'accuracy': '5.4392e-01',
+INFO :      	       'auc': '4.9479e-01',
+INFO :      	       'loss': '6.8929e-01',
+INFO :      	       'mcc': '0.0000e+00'}}
+INFO :
+Selected round: 0 (highest server validation MCC)
+Final server test metrics: {'loss': 0.7179184246202862, 'accuracy': 0.5439238653001464, 'precision': 0.0, 'recall': 0.0, 'f1': 0.0, 'macro_f1': 0.35229966808914176, 'mcc': 0.0, 'auc': 0.4711575021225391}
 ```

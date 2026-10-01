@@ -14,7 +14,7 @@ from src.federated import (
     load_vocabulary,
 )
 from src.model import TokenGraphRGCN
-from src.training import evaluate
+from src.training import evaluate, find_best_threshold
 
 app = ServerApp()
 
@@ -22,7 +22,7 @@ app = ServerApp()
 @app.main()
 def main(grid: Grid, context: Context) -> None:
     vocabulary_path = config_value(context, "vocabulary", "shared_vocabulary.json")
-    rounds = config_value(context, "rounds", 20)
+    rounds = config_value(context, "rounds", 30)
     min_clients = config_value(context, "min_clients", 2)
     embedding_dim = config_value(context, "embedding_dim", 128)
     hidden_dim = config_value(context, "hidden_dim", 128)
@@ -30,6 +30,7 @@ def main(grid: Grid, context: Context) -> None:
     learning_rate = config_value(context, "learning_rate", 1e-3)
     output = config_value(context, "output", "federated_checkpoint.pt")
     mode = config_value(context, "mode", "iid")
+    threshold_metric = config_value(context, "threshold_metric", "macro_f1")
 
     vocabulary = load_vocabulary(vocabulary_path)
     model = create_model(len(vocabulary), embedding_dim, hidden_dim, dropout)
@@ -73,13 +74,20 @@ def main(grid: Grid, context: Context) -> None:
     best_round = int(best_checkpoint["round"])
     model.load_state_dict(final_state)
     model.to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+    decision_threshold = float(best_checkpoint["threshold"])
     test_metrics = evaluate_server_split(
         context,
         model,
         vocabulary,
         split="test",
+        threshold=decision_threshold,
     )
-    print(f"Selected round: {best_round} (highest server validation MCC)")
+    print(
+        f"Selected round: {best_round} "
+        f"(best validation {threshold_metric}="
+        f"{float(best_checkpoint['score']):.4f}, "
+        f"threshold={decision_threshold:.2f})"
+    )
     print(f"Final server test metrics: {test_metrics}")
     torch.save(
         {
@@ -91,6 +99,9 @@ def main(grid: Grid, context: Context) -> None:
             "rounds": rounds,
             "selected_round": best_round,
             "server_validation_mcc": float(best_checkpoint["mcc"]),
+            "server_validation_score": float(best_checkpoint["score"]),
+            "threshold_metric": threshold_metric,
+            "decision_threshold": decision_threshold,
         },
         output,
     )
@@ -102,6 +113,7 @@ def evaluate_server_split(
     model: TokenGraphRGCN,
     vocabulary: dict[str, int],
     split: str,
+    threshold: float = 0.5,
 ) -> dict[str, float]:
     device = next(model.parameters()).device
     batch_size = config_value(context, "batch_size", 32)
@@ -109,7 +121,7 @@ def evaluate_server_split(
     records = load_json_records(f"data/federated/{mode}/server/{split}.json")
     graph_kwargs = {
         "max_tokens": config_value(context, "max_tokens", 512),
-        "context_window": config_value(context, "context_window", 2),
+        "context_window": config_value(context, "context_window", 4),
         "normalize_tokens": config_value(context, "normalize_tokens", False),
         "structural_edges": config_value(context, "structural_edges", True),
         "ast_edges": config_value(context, "ast_edges", False),
@@ -118,7 +130,13 @@ def evaluate_server_split(
     }
     graphs = records_to_graphs(records, **graph_kwargs)
     loader = DataLoader(graphs, batch_size=batch_size, shuffle=False)
-    return evaluate(model, loader, nn.CrossEntropyLoss(), device)
+    return evaluate(
+        model,
+        loader,
+        nn.CrossEntropyLoss(),
+        device,
+        threshold=threshold,
+    )
 
 
 def get_global_validation_fn(
@@ -127,7 +145,7 @@ def get_global_validation_fn(
     vocabulary: dict[str, int],
     best_checkpoint: dict[str, object],
 ):
-    """Select and retain the global model with the best server validation MCC."""
+    """Select the best checkpoint and threshold using server validation data."""
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     validation_records = load_json_records(
@@ -135,7 +153,7 @@ def get_global_validation_fn(
     )
     graph_kwargs = {
         "max_tokens": config_value(context, "max_tokens", 512),
-        "context_window": config_value(context, "context_window", 2),
+        "context_window": config_value(context, "context_window", 4),
         "normalize_tokens": config_value(context, "normalize_tokens", False),
         "structural_edges": config_value(context, "structural_edges", True),
         "ast_edges": config_value(context, "ast_edges", False),
@@ -153,9 +171,24 @@ def get_global_validation_fn(
     def global_evaluate(server_round: int, arrays: ArrayRecord) -> MetricRecord:
         model.load_state_dict(arrays.to_torch_state_dict())
         metrics = evaluate(model, validation_loader, criterion, device)
-        previous_mcc = float(best_checkpoint.get("mcc", -float("inf")))
-        if metrics["mcc"] > previous_mcc:
-            best_checkpoint["mcc"] = float(metrics["mcc"])
+        threshold, score = find_best_threshold(
+            model,
+            validation_loader,
+            criterion,
+            device,
+            metric=config_value(context, "threshold_metric", "macro_f1"),
+        )
+        if score > float(best_checkpoint.get("score", -float("inf"))):
+            thresholded_metrics = evaluate(
+                model,
+                validation_loader,
+                criterion,
+                device,
+                threshold=threshold,
+            )
+            best_checkpoint["score"] = score
+            best_checkpoint["threshold"] = threshold
+            best_checkpoint["mcc"] = thresholded_metrics["mcc"]
             best_checkpoint["round"] = server_round
             best_checkpoint["model_state_dict"] = {
                 name: value.detach().cpu().clone()
@@ -167,6 +200,8 @@ def get_global_validation_fn(
                 "loss": float(metrics["loss"]),
                 "mcc": float(metrics["mcc"]),
                 "auc": float(metrics["auc"]),
+                "threshold": float(threshold),
+                "threshold_metric_score": float(score),
             }
         )
 
