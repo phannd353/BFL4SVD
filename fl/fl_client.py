@@ -13,7 +13,7 @@ from flwr.app import (
 from flwr.clientapp import ClientApp
 
 from src.federated import config_value, create_local_state
-from src.training import evaluate, train_one_epoch
+from src.training import evaluate, find_best_threshold, train_one_epoch
 
 app = ClientApp()
 
@@ -32,7 +32,7 @@ def train(message: Message, context: Context) -> Message:
     validation_path = (
         f"data/federated/{mode}/client_{int(partition_id) + 1}/validation.json"
     )
-    model, device, train_loader, _, criterion = create_local_state(
+    model, device, train_loader, validation_loader, criterion = create_local_state(
         context,
         data_path,
         validation_path,
@@ -81,12 +81,35 @@ def train(message: Message, context: Context) -> Message:
             proximal_mu=proximal_mu,
         )
 
+    threshold_metric = str(
+        config.get(
+            "threshold_metric",
+            config_value(context, "threshold_metric", "macro_f1"),
+        )
+    )
+    validation_threshold, validation_score = find_best_threshold(
+        model,
+        validation_loader,
+        criterion,
+        device,
+        metric=threshold_metric,
+    )
+    validation_metrics = evaluate(
+        model,
+        validation_loader,
+        criterion,
+        device,
+        threshold=validation_threshold,
+    )
     metrics = MetricRecord(
         {
             "num-examples": len(train_loader.dataset),
             "train-loss": float(
                 evaluate(model, train_loader, criterion, device)["loss"]
             ),
+            "validation_score": float(validation_score),
+            "validation_threshold": float(validation_threshold),
+            "validation_mcc": float(validation_metrics["mcc"]),
         }
     )
     return Message(

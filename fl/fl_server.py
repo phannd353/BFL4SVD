@@ -4,7 +4,6 @@ import torch
 import torch.nn as nn
 from flwr.app import ArrayRecord, ConfigRecord, Context, MetricRecord
 from flwr.serverapp import Grid, ServerApp
-from flwr.serverapp.strategy import FedAvg
 from torch_geometric.loader import DataLoader
 
 from src.data import load_json_records, records_to_graphs
@@ -14,6 +13,7 @@ from src.federated import (
     load_vocabulary,
 )
 from src.model import TokenGraphRGCN
+from src.strategy import QualityFedAvg
 from src.training import evaluate, find_best_threshold
 
 app = ServerApp()
@@ -36,12 +36,19 @@ def main(grid: Grid, context: Context) -> None:
     model = create_model(len(vocabulary), embedding_dim, hidden_dim, dropout)
     arrays = ArrayRecord(model.state_dict())
 
-    strategy = FedAvg(
+    strategy = QualityFedAvg(
         fraction_train=1.0,
         fraction_evaluate=1.0,
         min_available_nodes=min_clients,
         min_train_nodes=min_clients,
         min_evaluate_nodes=min_clients,
+        threshold_metric=threshold_metric,
+        min_client_score=config_value(context, "min_client_score", 0.5),
+        min_clients_to_aggregate=config_value(
+            context,
+            "min_clients_to_aggregate",
+            min_clients,
+        ),
     )
     best_checkpoint: dict[str, object] = {}
 
@@ -54,6 +61,7 @@ def main(grid: Grid, context: Context) -> None:
                 "local_epochs": config_value(context, "local_epochs", 1),
                 "weight_decay": config_value(context, "weight_decay", 1e-4),
                 "proximal_mu": config_value(context, "proximal_mu", 0.001),
+                "threshold_metric": threshold_metric,
                 "mode": mode,
             }
         ),

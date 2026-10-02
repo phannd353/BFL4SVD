@@ -364,6 +364,12 @@ RGCN baseline's context window (4), weighted loss, and macro-F1 threshold
 selection. The threshold and selected round are included in the checkpoint.
 Do not use the final test result to tune the run.
 
+`QualityFedAvg` filters client updates using the validation score computed on
+each client's own validation partition after local training. By default it
+requires macro-F1 >= 0.50 and keeps at least the two highest-scoring clients if
+too few pass the gate, so a round can still aggregate. Tune
+`min_client_score` using client/server validation results, not the test set.
+
 FedProx is enabled by default (`proximal_mu = 0.001`) to limit client updates
 drifting away from the current global model. Start with one local epoch and more
 communication rounds; ten local epochs over five rounds can cause substantial
@@ -379,7 +385,9 @@ flwr run . --stream \
   --run-config 'proximal_mu=0.001' \
   --run-config 'context_window=4' \
   --run-config 'class_weights=true' \
-  --run-config 'threshold_metric="macro_f1"'
+  --run-config 'threshold_metric="macro_f1"' \
+  --run-config 'min_client_score=0.5' \
+  --run-config 'min_clients_to_aggregate=2'
 ```
 
 Compare IID and non-IID runs with the same seed and hyperparameters. Choose

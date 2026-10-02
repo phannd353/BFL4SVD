@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "devign-federated"
 version = "0.1.0"
 description = "Federated Learning with PyTorch and Flower (Quickstart Example)"
-license = {file = "LICENSE"}
+license = {file = "../LICENSE"}
 dependencies = [
     "flwr",
     "numpy",
@@ -15,6 +15,7 @@ dependencies = [
     "torch-geometric",
     "tree-sitter",
     "tree-sitter-c",
+    "ray"
 ]
 
 [tool.flwr.app]
@@ -49,8 +50,10 @@ ast_edges = false
 data_flow_edges = false
 class_weights = true
 threshold_metric = "macro_f1"
+min_client_score = 0.5
+min_clients_to_aggregate = 2
 seed = 42
-mode = 'non-iid'
+mode = 'iid'
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
