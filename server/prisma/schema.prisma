@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String        @id
+  name          String
+  email         String
+  emailVerified Boolean       @default(false)
+  image         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  role          String?
+  banned        Boolean?      @default(false)
+  banReason     String?
+  banExpires    DateTime?
+  sessions      Session[]
+  accounts      Account[]
+  client        Client?
+  trainingJobs  TrainingJob[] @relation("TrainingJobCreator")
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Client {
+  id            String                   @id @default(cuid())
+  userId        String                   @unique
+  user          User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  walletAddress String?                  @unique
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  trainingJobs  TrainingJobParticipant[]
+
+  @@map("client")
+}
+
+enum TrainingJobStatus {
+  DRAFT
+  RUNNING
+  STOPPED
+  COMPLETED
+}
+
+enum TrainingJobParticipantStatus {
+  JOINED
+  LEFT
+}
+
+model TrainingJob {
+  id            String                   @id @default(cuid())
+  name          String
+  description   String?
+  status        TrainingJobStatus        @default(DRAFT)
+  createdById   String?
+  createdBy     User?                    @relation("TrainingJobCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  plannedRounds Int?
+  currentRound  Int                      @default(0)
+  epochs        Int?
+  batchSize     Int?
+  learningRate  Float?
+  modelHash     String?
+  participants  TrainingJobParticipant[]
+  rounds        TrainingJobRound[]
+  logs          TrainingJobLog[]
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+
+  @@index([status])
+  @@index([createdById])
+  @@map("training_job")
+}
+
+model TrainingJobParticipant {
+  id       String                       @id @default(cuid())
+  jobId    String
+  job      TrainingJob                  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  clientId String
+  client   Client                       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  status   TrainingJobParticipantStatus @default(JOINED)
+  joinedAt DateTime                     @default(now())
+  leftAt   DateTime?
+
+  @@unique([jobId, clientId])
+  @@index([clientId, status])
+  @@map("training_job_participant")
+}
+
+model TrainingJobRound {
+  id                 String      @id @default(cuid())
+  jobId              String
+  job                TrainingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  roundNumber        Int
+  modelHash          String?
+  blockchainUpdateId String?
+  metrics            Json?
+  createdAt          DateTime    @default(now())
+
+  @@unique([jobId, roundNumber])
+  @@map("training_job_round")
+}
+
+model TrainingJobLog {
+  id        String      @id @default(cuid())
+  jobId     String
+  job       TrainingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  level     String      @default("info")
+  message   String
+  createdAt DateTime    @default(now())
+
+  @@index([jobId, createdAt])
+  @@map("training_job_log")
+}
+
+model Session {
+  id             String   @id
+  expiresAt      DateTime
+  token          String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy String?
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}

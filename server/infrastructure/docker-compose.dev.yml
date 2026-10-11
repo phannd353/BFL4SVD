@@ -1,0 +1,24 @@
+services:
+  bfl4svd-pgdb:
+    image: postgres:alpine
+    container_name: bfl4svd-pgdb
+    environment:
+      POSTGRES_USER: bfl4svd
+      POSTGRES_PASSWORD: secure_password
+      POSTGRES_DB: bfl4svd
+    ports:
+      - '5432:5432'
+    volumes:
+      - bfl4svd-pgdb-data:/var/lib/postgresql
+
+  bfl4svd-rdb:
+    image: redis:alpine
+    container_name: bfl4svd-rdb
+    ports:
+      - '6379:6379'
+    volumes:
+      - bfl4svd-rdb-data:/data
+
+volumes:
+  bfl4svd-pgdb-data:
+  bfl4svd-rdb-data:

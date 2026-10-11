@@ -25,6 +25,8 @@
       "@/*": ["./src/*"],
       "@/config/*": ["./src/config/*"],
       "@/artifacts/*": ["./artifacts/*"],
+      "@prisma-generated": ["./prisma/generated"],
+      "@prisma-generated/*": ["./prisma/generated/*"],
     },
   },
 }

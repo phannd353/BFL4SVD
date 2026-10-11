@@ -1,28 +1,28 @@
 // SPDX-License-Identifier: UNLICENSE
 pragma solidity 0.8.37;
 
+struct Model {
+    uint256 id;
+    uint256 upadteId;
+    address owner;
+    string modelHash;
+    uint256 timestamp;
+}
+
+struct ModelUpdate {
+    uint256 id;
+    address owner;
+    uint256 score;
+    string modelHash;
+    uint256 epoch;
+    uint256 learningRate;
+    uint256 batchSize;
+    uint256 prevModelId;
+    uint256 accuracy;
+    uint256 timestamp;
+}
+
 contract FLRegistry {
-    struct Model {
-        uint256 id;
-        uint256 upadteId;
-        address owner;
-        string modelHash;
-        uint256 timestamp;
-    }
-
-    struct ModelUpdate {
-        uint256 id;
-        address owner;
-        uint256 score;
-        string modelHash;
-        uint256 epoch;
-        uint256 learningRate;
-        uint256 batchSize;
-        uint256 prevModelId;
-        uint256 accuracy;
-        uint256 timestamp;
-    }
-
     Model[] public models;
     ModelUpdate[] public modelUpdates;
 
