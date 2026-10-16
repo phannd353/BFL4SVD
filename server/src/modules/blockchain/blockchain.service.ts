@@ -47,11 +47,10 @@ export class BlockchainService {
     const updates = (await contract.getFunction(
       'getModelUpdates',
     )()) as OnChainModelUpdate[];
-    const update = updates[id];
-
-    if (!update) {
+    if (id >= updates.length) {
       throw new NotFoundException('Model update not found');
     }
+    const update = updates[id];
 
     return this.serializeModelUpdate(update);
   }

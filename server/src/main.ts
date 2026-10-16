@@ -1,12 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
-import { middleware } from './common';
+import { ConfigService, middleware } from './common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
 
   const logger = app.get(Logger);
+  const configService: ConfigService = app.get(ConfigService);
 
   middleware(app);
 
@@ -19,9 +20,9 @@ async function bootstrap() {
   //  });
 
   app.enableShutdownHooks();
-  const port = process.env.NODE_PORT ?? 3000;
+  const port = configService.get('port') || 3000;
   await app.listen(port);
-  logger.log(`Server is running on port ${process.env.NODE_PORT ?? 3000}`);
+  logger.log(`Server is running on port ${port}`);
 }
 
 bootstrap().catch((error) => {

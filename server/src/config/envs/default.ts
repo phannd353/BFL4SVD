@@ -8,6 +8,9 @@ export const config = {
     url: process.env.DATABASE_URL || '',
     directUrl: process.env.DIRECT_DATABASE_URL || '',
   },
+  redis: {
+    url: process.env.REDIS_URL || 'redis://localhost:6379',
+  },
   trustedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || [],
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
   serverUrl: process.env.SERVER_URL || 'http://localhost:3001',

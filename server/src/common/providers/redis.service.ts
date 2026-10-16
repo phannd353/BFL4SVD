@@ -23,7 +23,8 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     private readonly logger: Logger,
   ) {
-    this.redisClient = this.cacheManager.stores[0]?.store.client as any;
+    this.redisClient = this.cacheManager.stores[0]?.store.store.store
+      .client as any;
 
     return new Proxy(this, {
       get(target, prop) {

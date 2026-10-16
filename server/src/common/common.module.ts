@@ -9,9 +9,8 @@ import {
   MODULE_OPTIONS_TOKEN,
   OPTIONS_TYPE,
 } from './common.module-definition';
-import { createKeyv, RedisClientOptions } from '@keyv/redis';
+import KeyvRedis, { createKeyv, Keyv, RedisClientOptions } from '@keyv/redis';
 import { LoggerModule } from './logger';
-import { MeterModule } from './otel';
 
 const { ...prvds } = providers;
 const services = Object.values(prvds);
@@ -33,10 +32,10 @@ export class CommonModule extends ConfigurableModuleClass {
           useFactory: async (config: providers.ConfigService) => ({
             stores: [
               createKeyv({
-                url: config.get('REDIS_URL'),
+                url: config.get('redis.url') as string,
               } as RedisClientOptions),
             ],
-            ttl: config.get('NODE_ENV') === 'development' ? -1 : 30 * 1000, // 30 secs, short caching time for gateway route auto caching
+            ttl: config.get('env') === 'development' ? -1 : 30 * 1000, // 30 secs, short caching time for gateway route auto caching
             max: 100, // Maximum number of items in cache
           }),
           isGlobal: true,
