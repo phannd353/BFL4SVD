@@ -1,203 +1,120 @@
 import { NotFoundException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ContractService } from '@/common';
+import { PrismaService } from '@/infrastructure/database';
 import { ModelService } from './model.service';
 
-const owner = '0x0000000000000000000000000000000000000001';
-
-const onChainModel = (
-  id: bigint,
-  updateId: bigint,
-  overrides: {
-    modelOwner?: string;
-    modelHash?: string;
-    timestamp?: bigint;
-  } = {},
-) =>
-  [
-    id,
-    updateId,
-    overrides.modelOwner ?? owner,
-    overrides.modelHash ?? `model-${id}`,
-    overrides.timestamp ?? 100n + id,
-  ] as const;
-
-const onChainUpdate = (
-  id: bigint,
-  previousUpdateId: bigint,
-  overrides: {
-    updateOwner?: string;
-    score?: bigint;
-    modelHash?: string;
-    timestamp?: bigint;
-  } = {},
-) =>
-  [
-    id,
-    overrides.updateOwner ?? owner,
-    overrides.score ?? 10n + id,
-    overrides.modelHash ?? `update-${id}`,
-    1n,
-    2n,
-    32n,
-    previousUpdateId,
-    90n,
-    overrides.timestamp ?? 1000n + id,
-  ] as const;
-
 describe('ModelService', { tags: ['unit', 'models'] }, () => {
-  const contract = { getFunction: vi.fn() };
-  const contractService = {
-    getFLRegistryContract: vi.fn(),
-  } as unknown as ContractService;
+  const prisma = {
+    model: {
+      findMany: vi.fn(),
+      findUnique: vi.fn(),
+    },
+    modelUpdate: {
+      findMany: vi.fn(),
+    },
+  } as unknown as PrismaService;
   let service: ModelService;
 
   beforeEach(() => {
     vi.resetAllMocks();
-    contractService.getFLRegistryContract = vi
-      .fn()
-      .mockResolvedValue(contract as never);
-    service = new ModelService(contractService);
+    service = new ModelService(prisma);
   });
 
-  it('returns all models with bigint fields serialized as strings', async () => {
-    contract.getFunction.mockReturnValue(
-      vi
-        .fn()
-        .mockResolvedValue([
-          onChainModel(0n, 0n, { timestamp: 12345678901234567890n }),
-          onChainModel(1n, 9n, { modelHash: 'round-one-model' }),
-        ]),
-    );
+  it('lists database models newest first', async () => {
+    const models = [
+      { hash: 'model-b', size: 20, filePath: '/models/b' },
+      { hash: 'model-a', size: 10, filePath: '/models/a' },
+    ];
+    vi.mocked(prisma.model.findMany).mockResolvedValue(models as never);
 
-    await expect(service.getAllModels()).resolves.toEqual([
-      {
-        id: '0',
-        updateId: '0',
-        owner,
-        modelHash: 'model-0',
-        timestamp: '12345678901234567890',
-      },
-      {
-        id: '1',
-        updateId: '9',
-        owner,
-        modelHash: 'round-one-model',
-        timestamp: '101',
-      },
-    ]);
-    expect(contract.getFunction).toHaveBeenCalledWith('getModels');
-  });
-
-  it('gets a model by its ID', async () => {
-    contract.getFunction.mockReturnValue(
-      vi
-        .fn()
-        .mockResolvedValue([
-          onChainModel(0n, 0n),
-          onChainModel(1n, 9n, { modelHash: 'latest-model' }),
-        ]),
-    );
-
-    await expect(service.getModelById(1)).resolves.toMatchObject({
-      id: '1',
-      updateId: '9',
-      modelHash: 'latest-model',
+    await expect(service.getAllModels()).resolves.toEqual(models);
+    expect(prisma.model.findMany).toHaveBeenCalledWith({
+      orderBy: { createdAt: 'desc' },
     });
   });
 
-  it('throws not found when the model ID does not exist', async () => {
-    contract.getFunction.mockReturnValue(
-      vi.fn().mockResolvedValue([onChainModel(0n, 0n)]),
-    );
+  it('gets a model by its content hash', async () => {
+    const model = {
+      hash: 'model-hash',
+      size: 42,
+      filePath: '/models/model-hash',
+    };
+    vi.mocked(prisma.model.findUnique).mockResolvedValue(model as never);
 
-    await expect(service.getModelById(1)).rejects.toBeInstanceOf(
+    await expect(service.getModelById('model-hash')).resolves.toEqual(model);
+    expect(prisma.model.findUnique).toHaveBeenCalledWith({
+      where: { hash: 'model-hash' },
+    });
+  });
+
+  it('throws not found when the model hash does not exist', async () => {
+    vi.mocked(prisma.model.findUnique).mockResolvedValue(null);
+
+    await expect(service.getModelById('missing')).rejects.toBeInstanceOf(
       NotFoundException,
     );
   });
 
-  it('returns model updates in chronological order following previous-update links', async () => {
-    contract.getFunction.mockImplementation((functionName: string) =>
-      vi
-        .fn()
-        .mockResolvedValue(
-          functionName === 'getModels'
-            ? [onChainModel(0n, 0n), onChainModel(1n, 2n)]
-            : [
-                onChainUpdate(0n, 0n, { modelHash: 'genesis-update' }),
-                onChainUpdate(1n, 0n, { modelHash: 'round-zero-update' }),
-                onChainUpdate(2n, 1n, { modelHash: 'round-one-update' }),
-              ],
-        ),
-    );
+  it('returns chronologically ordered updates aggregated into the model', async () => {
+    vi.mocked(prisma.model.findUnique).mockResolvedValue({
+      hash: 'aggregate-hash',
+    } as never);
+    vi.mocked(prisma.modelUpdate.findMany).mockResolvedValue([
+      {
+        id: 'update-1',
+        chainUpdateId: '4',
+        chainTxHash: '0xupdate',
+        chainSyncStatus: 'CONFIRMED',
+        clientAddress: '0xclient',
+        score: '80',
+        modelHash: 'client-model',
+        epoch: '3',
+        learningRate: '0.01',
+        batchSize: '32',
+        prevModelHash: 'previous-hash',
+        accuracy: '90',
+        timestamp: new Date('2026-01-01T00:00:00.000Z'),
+        trainingRound: { jobId: 'job-1', roundNumber: 2 },
+      },
+    ] as never);
 
-    await expect(service.getModelVersions(1)).resolves.toEqual([
-      expect.objectContaining({
-        id: '0',
-        modelHash: 'genesis-update',
-        timestamp: '1000',
-      }),
-      expect.objectContaining({
-        id: '1',
-        modelHash: 'round-zero-update',
-        prevModelId: '0',
-      }),
-      expect.objectContaining({
-        id: '2',
-        modelHash: 'round-one-update',
-        prevModelId: '1',
-      }),
+    await expect(service.getModelVersions('aggregate-hash')).resolves.toEqual([
+      {
+        id: 'update-1',
+        chainUpdateId: '4',
+        chainTxHash: '0xupdate',
+        chainSyncStatus: 'CONFIRMED',
+        trainingJobId: 'job-1',
+        roundNumber: '2',
+        clientAddress: '0xclient',
+        score: '80',
+        modelHash: 'client-model',
+        epoch: '3',
+        learningRate: '0.01',
+        batchSize: '32',
+        prevModelHash: 'previous-hash',
+        accuracy: '90',
+        timestamp: '2026-01-01T00:00:00.000Z',
+      },
     ]);
-    expect(contract.getFunction).toHaveBeenNthCalledWith(1, 'getModels');
-    expect(contract.getFunction).toHaveBeenNthCalledWith(2, 'getModelUpdates');
+    expect(prisma.modelUpdate.findMany).toHaveBeenCalledWith({
+      where: {
+        trainingRound: { is: { aggregatedModelHash: 'aggregate-hash' } },
+      },
+      include: {
+        trainingRound: { select: { jobId: true, roundNumber: true } },
+      },
+      orderBy: [{ timestamp: 'asc' }, { id: 'asc' }],
+    });
   });
 
-  it('stops model history at an update owned by a different address', async () => {
-    const otherOwner = '0x0000000000000000000000000000000000000002';
-    contract.getFunction.mockImplementation((functionName: string) =>
-      vi
-        .fn()
-        .mockResolvedValue(
-          functionName === 'getModels'
-            ? [onChainModel(0n, 0n), onChainModel(1n, 1n)]
-            : [
-                onChainUpdate(0n, 0n, { updateOwner: otherOwner }),
-                onChainUpdate(1n, 0n),
-              ],
-        ),
-    );
+  it('rejects version requests for unknown model hashes', async () => {
+    vi.mocked(prisma.model.findUnique).mockResolvedValue(null);
 
-    await expect(service.getModelVersions(1)).resolves.toEqual([
-      expect.objectContaining({ id: '1', owner }),
-    ]);
-  });
-
-  it('terminates malformed cyclic update history without duplicates', async () => {
-    contract.getFunction.mockImplementation((functionName: string) =>
-      vi
-        .fn()
-        .mockResolvedValue(
-          functionName === 'getModels'
-            ? [onChainModel(0n, 0n), onChainModel(1n, 1n)]
-            : [onChainUpdate(0n, 1n), onChainUpdate(1n, 0n)],
-        ),
-    );
-
-    await expect(service.getModelVersions(1)).resolves.toMatchObject([
-      { id: '0' },
-      { id: '1' },
-    ]);
-  });
-
-  it('returns not found when requesting versions for a missing model', async () => {
-    contract.getFunction.mockReturnValue(
-      vi.fn().mockResolvedValue([onChainModel(0n, 0n)]),
-    );
-
-    await expect(service.getModelVersions(1)).rejects.toBeInstanceOf(
+    await expect(service.getModelVersions('missing')).rejects.toBeInstanceOf(
       NotFoundException,
     );
-    expect(contract.getFunction).toHaveBeenCalledTimes(1);
+    expect(prisma.modelUpdate.findMany).not.toHaveBeenCalled();
   });
 });

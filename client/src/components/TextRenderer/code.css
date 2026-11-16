@@ -1,0 +1,162 @@
+:root {
+    --prism-text: #282a36;
+    --prism-selection: #d6d6d6;
+    --prism-comment: #6a9955;
+    --prism-punctuation: #5c6370;
+    --prism-property: #a167e6;
+    --prism-string: #c48000;
+    --prism-operator: #5c6370;
+    --prism-keyword: #c678dd;
+    --prism-function: #56a8f5;
+    --prism-regex: #d19a66;
+    --prism-border: #999;
+}
+
+.dark {
+    --prism-text: #f8f8f2;
+    --prism-selection: #44475a;
+    --prism-comment: #6272a4;
+    --prism-punctuation: #f8f8f2;
+    --prism-property: #bd93f9;
+    --prism-string: #f1fa8c;
+    --prism-operator: #f8f8f2;
+    --prism-keyword: #ff79c6;
+    --prism-function: #50fa7b;
+    --prism-regex: #ffb86c;
+    --prism-border: #999;
+}
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 16px;
+    font-size: 100%;
+    left: 0;
+    width: 3em; /* works for line numbers 1 to 999 */
+    letter-spacing: -1px;
+    border-right: 1px solid var(--prism-border);
+    user-select: none;
+}
+
+.line-numbers-rows > span {
+    display: block;
+    counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+    content: counter(linenumber);
+    color: var(--prism-border);
+    display: block;
+    padding-right: 0.8em;
+    text-align: right;
+}
+
+code[class*="language-"]::-moz-selection,
+pre[class*="language-"]::-moz-selection,
+code[class*="language-"] ::-moz-selection,
+pre[class*="language-"] ::-moz-selection {
+    background: var(--prism-selection);
+}
+
+code[class*="language-"]::selection,
+pre[class*="language-"]::selection,
+code[class*="language-"] ::selection,
+pre[class*="language-"] ::selection {
+    background: var(--prism-selection);
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: var(--prism-text);
+    text-shadow: none;
+    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    tab-size: 4;
+    hyphens: none;
+}
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: var(--prism-comment);
+}
+
+.token.punctuation {
+    color: var(--prism-punctuation);
+}
+
+.token.namespace {
+    opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: var(--prism-property);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: var(--prism-string);
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: var(--prism-operator);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: var(--prism-keyword);
+}
+
+.token.function,
+.token.class-name {
+    color: var(--prism-function);
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: var(--prism-regex);
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}

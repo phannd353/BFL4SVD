@@ -5,6 +5,7 @@ export class UserBriefResponseDto extends PickType(UserBaseDto, [
   'id',
   'name',
   'image',
+  'walletAddress',
 ]) {
   @ApiProperty({
     description: 'ID duy nhất của người dùng',

@@ -5,10 +5,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CommonModule } from '@/common';
 import { AuthHelper } from './auth.helper';
 import { InfrastructureHelper } from './infrastructure.helper';
-import { ClientModule } from '@/modules/clients/client.module';
 import { TrainingJobsModule } from '@/modules/training-jobs/training-jobs.module';
 import { BlockchainModule } from '@/modules/blockchain/blockchain.module';
 import { ModelModule } from '@/modules/models/model.module';
+import { TrainingRoundsModule } from '@/modules/training-rounds/training-rounds.module';
 
 export async function createTestingAppModule(
   infraHelper: InfrastructureHelper,
@@ -38,8 +38,8 @@ export async function createTestingAppModule(
       }),
       PrismaModule.forRoot(),
       AuthModule,
-      ClientModule,
       TrainingJobsModule,
+      TrainingRoundsModule,
       BlockchainModule,
       ModelModule,
     ],

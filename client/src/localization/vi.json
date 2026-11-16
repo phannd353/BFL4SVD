@@ -1,0 +1,195 @@
+{
+  "Newsletter": {
+    "titlePrefix": "Nhận",
+    "titleEmphasis": "bản tin",
+    "description": "Đăng ký để nhận các bài viết và cập nhật mới nhất về lịch sử Việt Nam.",
+    "emailPlaceholder": "Nhập email của bạn",
+    "emailAriaLabel": "Email",
+    "submit": "Đăng ký"
+  },
+  "ContactPage": {
+    "common": {
+      "empty": "—"
+    },
+    "address": {
+      "countryFallback": "Việt Nam"
+    },
+    "header": {
+      "title": "Liên Hệ",
+      "description": "Thông tin liên hệ và cách thức để bạn có thể kết nối với tôi."
+    },
+    "info": {
+      "title": "Thông Tin Liên Hệ",
+      "address": {
+        "label": "Địa Chỉ"
+      },
+      "phone": {
+        "label": "Điện Thoại"
+      },
+      "email": {
+        "label": "Email"
+      }
+    },
+    "social": {
+      "title": "Mạng Xã Hội",
+      "description": "Kết nối với chúng tôi trên các nền tảng",
+      "aria": {
+        "facebook": "Facebook",
+        "twitter": "Twitter",
+        "instagram": "Instagram",
+        "linkedin": "LinkedIn",
+        "github": "GitHub"
+      }
+    },
+    "faq": {
+      "title": "Câu Hỏi Thường Gặp",
+      "description": "Bạn có thể tìm thấy câu trả lời cho các câu hỏi phổ biến trong trang FAQ của chúng tôi.",
+      "cta": "Xem FAQ"
+    },
+    "map": {
+      "title": "Bản Đồ",
+      "description": "Tìm đường đến văn phòng của chúng tôi",
+      "open": "Mở bản đồ",
+      "placeholder": "[Tích hợp Google Maps hoặc bản đồ khác tại đây]"
+    }
+  },
+  "ContactForm": {
+    "header": {
+      "title": "Gửi Tin Nhắn",
+      "description": "Điền thông tin vào biểu mẫu bên dưới và chúng tôi sẽ liên hệ lại với bạn sớm nhất có thể."
+    },
+    "fields": {
+      "name": {
+        "label": "Họ và Tên",
+        "placeholder": "Nguyễn Văn A"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "email@example.com"
+      },
+      "phone": {
+        "label": "Số Điện Thoại",
+        "placeholder": "0912 345 678"
+      },
+      "subject": {
+        "label": "Tiêu Đề",
+        "placeholder": "Chủ đề tin nhắn"
+      },
+      "message": {
+        "label": "Nội Dung",
+        "placeholder": "Nhập nội dung tin nhắn của bạn..."
+      }
+    },
+    "actions": {
+      "submit": "Gửi Tin Nhắn",
+      "submitting": "Đang Gửi..."
+    },
+    "alerts": {
+      "success": "Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi trong thời gian sớm nhất."
+    },
+    "privacy": {
+      "prefix": "Bằng việc gửi biểu mẫu này, bạn đồng ý với",
+      "and": "và",
+      "suffix": "của chúng tôi.",
+      "privacyLinkText": "Chính Sách Bảo Mật",
+      "termsLinkText": "Điều Khoản Sử Dụng",
+      "privacyHref": "/privacy",
+      "termsHref": "/terms"
+    },
+    "shortcuts": {
+      "title": "Cần Hỗ Trợ Ngay?",
+      "description": "Nếu bạn cần hỗ trợ khẩn cấp hoặc có câu hỏi cần giải đáp ngay lập tức, đừng ngần ngại liên hệ với chúng tôi qua hotline hoặc email.",
+      "callHotline": "Gọi Hotline",
+      "sendEmail": "Gửi Email"
+    }
+  },
+  "HomePage": {
+    "Metadata": {
+      "title": "BFL4SVD — Phát hiện lỗ hổng phần mềm",
+      "description": "Nền tảng học liên kết dựa trên blockchain hỗ trợ phát hiện lỗ hổng phần mềm với khả năng truy xuất cập nhật mô hình.",
+      "og-title": "BFL4SVD",
+      "og-description": "Cùng phát hiện lỗ hổng phần mềm bằng học liên kết và blockchain.",
+      "og-image": "https://res.cloudinary.com/dr814cumk/image/upload/v1770954853/Nien_Su_Viet_logo_bviv6p.webp",
+      "logo": "/assets/logo/logo.webp",
+      "logoDark": "/assets/logo/logo-dark.webp",
+      "address": {
+        "street": "123 Nguyen Trai",
+        "district": "An Khanh",
+        "province": "Ho Chi Minh City",
+        "country": "Việt Nam"
+      }
+    },
+    "Auth": {
+      "account": "Tài khoản",
+      "cms-desk": "Quản lý nội dung",
+      "admin-dashboard": "Quản trị",
+      "sign-out": "Đăng xuất",
+      "sign-in": "Đăng nhập",
+      "sign-up": "Đăng ký"
+    },
+    "Theme": {
+      "light": "Sáng",
+      "dark": "Tối",
+      "system": "Hệ thống"
+    },
+    "Footer": {
+      "follow-us": "Theo dõi tôi",
+      "copyright": "© 2026 PhanND. All rights reserved.",
+      "social-media": "Mạng xã hội",
+      "contact": "Liên hệ",
+      "see-more": "Xem thêm"
+    }
+  },
+  "BlogPage": {
+    "title": "Blog",
+    "description": "Khám phá các bài viết về lịch sử và văn hóa Việt Nam",
+    "search-placeholder": "Tìm kiếm bài viết...",
+    "filter-by-category": "Lọc theo danh mục",
+    "all-categories": "Tất cả danh mục",
+    "sort-by": "Sắp xếp theo",
+    "latest": "Mới nhất",
+    "oldest": "Cũ nhất",
+    "most-popular": "Phổ biến nhất",
+    "no-posts-found": "Không tìm thấy bài viết",
+    "no-posts-description": "Thử điều chỉnh tìm kiếm hoặc bộ lọc để tìm nội dung bạn cần.",
+    "clear-filters": "Xóa bộ lọc",
+    "showing-results": "Hiển thị {count} bài viết",
+    "read-more": "Đọc thêm",
+    "featured-posts": "Bài viết nổi bật",
+    "recent-posts": "Bài viết gần đây",
+    "popular-tags": "Thẻ phổ biến",
+    "subscribe-newsletter": "Đăng ký nhận bản tin",
+    "enter-email": "Nhập email của bạn",
+    "subscribe": "Đăng ký",
+    "subscription-success": "Cảm ơn bạn đã đăng ký!",
+    "subscription-failed": "Đăng ký thất bại. Vui lòng thử lại.",
+    "already-subscribed": "Email này đã được đăng ký.",
+    "invalid-email": "Địa chỉ email không hợp lệ.",
+    "subscription-cta": "Nhận các bài viết mới nhất về lịch sử Việt Nam trực tiếp trong hộp thư đến của bạn."
+  },
+  "Shared": {
+    "author": "Tác giả",
+    "unknown-author": "Không rõ tác giả",
+    "period": "Thời gian",
+    "period-from": "Bắt đầu",
+    "period-to": "Kết thúc",
+    "category": "Danh mục",
+    "date": "Ngày",
+    "minute-to-read": "Phút đọc",
+    "minute": "phút",
+    "and": "và",
+    "about-us": "Giới thiệu",
+    "projects": "Projects",
+    "blog": "Blog",
+    "contact": "Liên hệ",
+    "privacy-policy": "Chính sách bảo mật",
+    "terms-of-service": "Điều khoản dịch vụ",
+    "approximate": "Khoảng",
+    "bce": "TCN",
+    "ce": "SCN",
+    "year": "năm",
+    "month": "tháng",
+    "day": "ngày",
+    "loading": "Đang tải..."
+  }
+}

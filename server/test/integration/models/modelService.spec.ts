@@ -1,8 +1,7 @@
 import { INestApplication } from '@nestjs/common';
-import { BaseContract } from 'ethers';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { ContractService } from '@/common';
+import { PrismaService } from '@/infrastructure/database';
 import { ModelService } from '@/modules/models/model.service';
 import { createTestingAppModule } from '../helper/app.helper';
 import { InfrastructureHelper } from '../helper/infrastructure.helper';
@@ -14,8 +13,7 @@ describe(
     let app: INestApplication;
     let infraHelper: InfrastructureHelper;
     let service: ModelService;
-    let writer: BaseContract;
-    let owner: string;
+    let prisma: PrismaService;
 
     beforeAll(async () => {
       infraHelper = new InfrastructureHelper();
@@ -23,11 +21,57 @@ describe(
 
       app = await createTestingAppModule(infraHelper);
       service = app.get(ModelService);
+      prisma = app.get(PrismaService);
 
-      const contractService = app.get(ContractService);
-      const contract = await contractService.getFLRegistryContract();
-      writer = contract.connect(await contractService.provider.getSigner(0));
-      owner = (await writer.getFunction('owner')()) as string;
+      await prisma.model.createMany({
+        data: [
+          { hash: 'initial-hash', size: 10, filePath: '/models/initial' },
+          { hash: 'aggregate-hash', size: 20, filePath: '/models/aggregate' },
+        ],
+      });
+      const job = await prisma.trainingJob.create({
+        data: {
+          name: 'model history test',
+          initialModelHash: 'initial-hash',
+          finalModelHash: 'aggregate-hash',
+        },
+      });
+      const round = await prisma.trainingJobRound.create({
+        data: {
+          jobId: job.id,
+          prevModelHash: 'initial-hash',
+          aggregatedModelHash: 'aggregate-hash',
+          roundNumber: 1,
+        },
+      });
+      await prisma.modelUpdate.createMany({
+        data: [
+          {
+            trainingRoundId: round.id,
+            clientAddress: '0x0000000000000000000000000000000000000001',
+            score: '80',
+            modelHash: 'client-model-1',
+            prevModelHash: 'initial-hash',
+            epoch: '2',
+            learningRate: '0.01',
+            batchSize: '32',
+            accuracy: '90',
+            timestamp: new Date('2026-01-01T00:00:00.000Z'),
+          },
+          {
+            trainingRoundId: round.id,
+            clientAddress: '0x0000000000000000000000000000000000000002',
+            score: '85',
+            modelHash: 'client-model-2',
+            prevModelHash: 'initial-hash',
+            epoch: '2',
+            learningRate: '0.01',
+            batchSize: '32',
+            accuracy: '92',
+            timestamp: new Date('2026-01-02T00:00:00.000Z'),
+          },
+        ],
+      });
     }, 30000);
 
     afterAll(async () => {
@@ -35,73 +79,54 @@ describe(
       await infraHelper?.stopInfrastructure();
     });
 
-    it('reads and serializes all on-chain models', async () => {
-      await expect(service.getAllModels()).resolves.toEqual([
-        {
-          id: '0',
-          updateId: '0',
-          owner,
-          modelHash: '0x0',
-          timestamp: expect.any(String),
-        },
-      ]);
+    it('reads models from the database', async () => {
+      await expect(service.getAllModels()).resolves.toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            hash: 'initial-hash',
+            size: 10,
+            filePath: '/models/initial',
+          }),
+          expect.objectContaining({
+            hash: 'aggregate-hash',
+            size: 20,
+            filePath: '/models/aggregate',
+          }),
+        ]),
+      );
     });
 
-    it('gets a model by ID and rejects missing IDs', async () => {
-      await expect(service.getModelById(0)).resolves.toMatchObject({
-        id: '0',
-        updateId: '0',
-        owner,
-        modelHash: '0x0',
+    it('gets a model by hash and rejects missing hashes', async () => {
+      await expect(
+        service.getModelById('aggregate-hash'),
+      ).resolves.toMatchObject({
+        hash: 'aggregate-hash',
+        size: 20,
       });
-      await expect(service.getModelById(1)).rejects.toMatchObject({
+      await expect(service.getModelById('missing-hash')).rejects.toMatchObject({
         status: 404,
       });
     });
 
-    it('returns linked model updates in chronological order after a round completes', async () => {
-      for (let updateId = 1; updateId <= 9; updateId++) {
-        const transaction = await writer.getFunction('uploadModelUpdate')(
-          `update-${updateId}`,
-          10 + updateId,
-          2,
-          3,
-          64,
-          updateId - 1,
-          85 + updateId,
-        );
-        await transaction.wait();
-      }
+    it('returns model updates from the round aggregated into that model', async () => {
+      const versions = await service.getModelVersions('aggregate-hash');
 
-      const models = await service.getAllModels();
-      expect(models).toHaveLength(2);
-      expect(models[1]).toMatchObject({
-        id: '1',
-        updateId: '9',
-        owner,
-        modelHash: 'update-9',
-      });
-
-      const versions = await service.getModelVersions(1);
-      expect(versions).toHaveLength(10);
-      expect(versions.map(({ id }) => id)).toEqual(
-        Array.from({ length: 10 }, (_, index) => String(index)),
-      );
+      expect(versions).toHaveLength(2);
+      expect(versions.map(({ modelHash }) => modelHash)).toEqual([
+        'client-model-1',
+        'client-model-2',
+      ]);
       expect(versions[0]).toMatchObject({
-        id: '0',
-        modelHash: '0x0',
-        owner,
-      });
-      expect(versions[9]).toMatchObject({
-        id: '9',
-        modelHash: 'update-9',
-        prevModelId: '8',
-        owner,
+        trainingJobId: expect.any(String),
+        roundNumber: '1',
+        prevModelHash: 'initial-hash',
       });
     });
 
-    it('rejects version requests for unknown models', async () => {
-      await expect(service.getModelVersions(99)).rejects.toMatchObject({
+    it('rejects version requests for unknown model hashes', async () => {
+      await expect(
+        service.getModelVersions('missing-hash'),
+      ).rejects.toMatchObject({
         status: 404,
       });
     });

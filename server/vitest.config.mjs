@@ -31,6 +31,10 @@ export default defineConfig({
         description: 'Tests for training jobs',
       },
       {
+        name: 'training-rounds',
+        description: 'Tests for training rounds',
+      },
+      {
         name: 'models',
         description: 'Tests for the models module',
       },

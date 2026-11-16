@@ -26,6 +26,11 @@ export function createBetterAuthInstance(
     account: {
       accountLinking: { enabled: true, trustedProviders: ['google'] },
     },
+    user: {
+      additionalFields: {
+        walletAddress: { type: 'string', required: false, unique: true },
+      },
+    },
     session: {
       expiresIn: 60 * 60 * 24, // 1 day
       updateAge: 60 * 60 * 1, // 1 hour (every 1 hour the session expiration is updated)

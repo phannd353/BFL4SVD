@@ -1,4 +1,5 @@
 import {
+  HttpException,
   Injectable,
   NestInterceptor,
   ExecutionContext,
@@ -55,7 +56,13 @@ export class SerializeResponseInterceptor implements NestInterceptor {
             errMessage = err?.message || 'Internal Server Error';
           }
 
-          const errStatus = err?.status || 500;
+          const errStatus =
+            err instanceof HttpException
+              ? err.getStatus()
+              : typeof err?.status === 'number'
+                ? err.status
+                : 500;
+          res.status(errStatus);
 
           return of<SerializedResponseDto<any>>({
             data: null,

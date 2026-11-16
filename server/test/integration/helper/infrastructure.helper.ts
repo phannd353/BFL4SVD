@@ -80,7 +80,7 @@ export class InfrastructureHelper {
     );
 
     // Estimate deployment gas before sending the transaction
-    const deployTx = await factory.getDeployTransaction('0x0', 0, 0, 0, 0, 0);
+    const deployTx = await factory.getDeployTransaction('0x0');
 
     const estimatedGas = await provider.estimateGas({
       ...deployTx,
@@ -90,7 +90,7 @@ export class InfrastructureHelper {
     console.log('Estimated gas:', estimatedGas.toString());
 
     // Deploy the contract
-    this.contract = await factory.deploy('0x0', 0, 0, 0, 0, 0);
+    this.contract = await factory.deploy('0x0');
 
     const tx = this.contract.deploymentTransaction();
     if (!tx) {

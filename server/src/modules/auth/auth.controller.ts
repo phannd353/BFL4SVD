@@ -8,7 +8,6 @@ import { ApiOkSerializedResponse, Serialize } from '@/common';
 import { UserBriefResponseDto } from './dto';
 import { RATE_LIMIT } from '@/config';
 import { Public } from '@/common/decorators/auth/public.decorator';
-import { ApiOkResponse } from '@nestjs/swagger';
 
 @Controller('auth')
 @Public() // Let Better Auth handle auth internally

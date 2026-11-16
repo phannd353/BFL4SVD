@@ -15,5 +15,10 @@ module.exports = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
+  user: {
+    additionalFields: {
+      walletAddress: { type: 'string', required: false, unique: true },
+    },
+  },
   plugins: [adminPlugin()],
 });

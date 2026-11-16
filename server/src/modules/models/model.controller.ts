@@ -1,26 +1,49 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 
 import { ModelService } from './model.service';
+import { Permissions } from '@/common/decorators/auth';
+import { RATE_LIMIT } from '@/config';
+import { Serialize } from '@/common';
+import {
+  ModelResponseDto,
+  ModelVersionResponseDto,
+} from './dto/model-response.dto';
 
 @Controller('models')
 export class ModelController {
   constructor(private readonly modelService: ModelService) {}
 
-  @Get(':id/versions')
-  async getModelVersions(@Param('id', ParseIntPipe) id: number) {
-    const versions = await this.modelService.getModelVersions(id);
-    return { status: 'ok', data: versions };
+  @Get(':hash/versions')
+  @Permissions({ modelUpdate: ['read'] })
+  @ApiOperation({ summary: 'List updates aggregated into a model' })
+  @ApiParam({ name: 'hash', description: 'Model hash' })
+  @ApiOkResponse({ description: 'Model versions, ordered by update time' })
+  @Throttle(RATE_LIMIT.INTERNAL)
+  @Serialize(ModelVersionResponseDto)
+  async getModelVersions(@Param('hash') hash: string) {
+    return this.modelService.getModelVersions(hash);
   }
 
-  @Get(':id')
-  async getModelById(@Param('id', ParseIntPipe) id: number) {
-    const model = await this.modelService.getModelById(id);
-    return { status: 'ok', data: model };
+  @Get(':hash')
+  @Permissions({ model: ['read'] })
+  @ApiOperation({ summary: 'Get a model by hash' })
+  @ApiParam({ name: 'hash', description: 'Model hash' })
+  @ApiOkResponse({ description: 'Model details from the database' })
+  @Throttle(RATE_LIMIT.INTERNAL)
+  @Serialize(ModelResponseDto)
+  async getModelById(@Param('hash') hash: string) {
+    return this.modelService.getModelById(hash);
   }
 
   @Get()
+  @Permissions({ model: ['read'] })
+  @ApiOperation({ summary: 'List models registered on FLRegistry' })
+  @ApiOkResponse({ description: 'Models stored in the database' })
+  @Throttle(RATE_LIMIT.INTERNAL)
+  @Serialize(ModelResponseDto)
   async getAllModels() {
-    const models = await this.modelService.getAllModels();
-    return { status: 'ok', data: models };
+    return this.modelService.getAllModels();
   }
 }

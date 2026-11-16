@@ -5,31 +5,32 @@ import {
   userAc,
 } from 'better-auth/plugins/admin/access';
 
-const crudActions = ['create', 'read', 'update', 'delete'] as (
-  'create' | 'read' | 'update' | 'delete'
-)[];
+const actions = <T extends string>(...values: T[]) => values;
 
-const eventStatements = {
-  historicalEvent: crudActions,
-  eventCategory: crudActions,
-  eventEdit: crudActions,
-};
-
-const cmsStatements = {
-  app: crudActions,
-  footerNavItem: crudActions,
-  headerNavItem: crudActions,
-  ping: crudActions,
-  post: crudActions,
-  comment: crudActions,
+const entityStatements = {
+  client: actions('create', 'read'),
+  model: actions('read'),
+  modelUpdate: actions('create', 'read', 'update', 'delete'),
+  blockchainEvent: actions('read'),
+  trainingJob: actions(
+    'create',
+    'read',
+    'update',
+    'delete',
+    'start',
+    'stop',
+    'cancel',
+    'finalize',
+  ),
+  trainingJobParticipant: actions('read', 'join', 'leave'),
+  trainingJobRound: actions('create', 'read'),
+  trainingJobLog: actions('read'),
 };
 
 const statements = {
-  // convert readonly arrays to mutable arrays
   user: [...defaultStatements.user],
   session: [...defaultStatements.session],
-  ...eventStatements,
-  ...cmsStatements,
+  ...entityStatements,
 };
 
 /**
@@ -40,32 +41,30 @@ const statements = {
 const ac = createAccessControl(statements);
 
 const admin = ac.newRole({
-  ...eventStatements,
-  ...cmsStatements,
+  ...entityStatements,
   ...(adminAc.statements as any),
 });
 
-const editor = ac.newRole({
-  ...eventStatements,
-  eventEdit: ['create', 'read', 'update'],
-  ...cmsStatements,
-  ping: [],
+const client = ac.newRole({
+  client: ['create', 'read'],
+  model: ['read'],
+  modelUpdate: ['create', 'read'],
+  blockchainEvent: ['read'],
+  trainingJob: ['read'],
+  trainingJobParticipant: ['read', 'join', 'leave'],
+  trainingJobRound: ['read'],
+  trainingJobLog: ['read'],
   ...(userAc.statements as any),
 });
 
 const user = ac.newRole({
-  historicalEvent: ['read'],
-  eventCategory: ['read'],
-  eventEdit: ['read'],
-  app: ['read'],
-  footerNavItem: ['read'],
-  headerNavItem: ['read'],
-  blog: ['read'],
-  ...userAc.statements,
-} as unknown as any);
+  model: ['read'],
+  modelUpdate: ['read'],
+  ...(userAc.statements as any),
+});
 
 const resources = Object.keys(statements) as (keyof typeof statements)[];
-const roles = { admin, user, editor } as const;
+const roles = { admin, user, client } as const;
 export type Role = keyof typeof roles;
 const ROLES = (Object.keys(roles) as Role[]).reduce(
   (acc, role) => {
@@ -76,6 +75,6 @@ const ROLES = (Object.keys(roles) as Role[]).reduce(
 );
 
 export type Resource = keyof typeof statements;
-export type Action = (typeof crudActions)[number];
+export type Action = (typeof statements)[keyof typeof statements][number];
 
-export { admin, editor, user, ac, roles, resources, statements, ROLES };
+export { admin, client, user, ac, roles, resources, statements, ROLES };

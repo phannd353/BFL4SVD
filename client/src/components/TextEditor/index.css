@@ -1,0 +1,245 @@
+:root {
+    --cm-text: #282a36;
+    --cm-selection: #d6d6d6;
+    --cm-comment: #6a9955;
+    --cm-punctuation: #5c6370;
+    --cm-property: #a167e6;
+    --cm-string: #c48000;
+    --cm-operator: #5c6370;
+    --cm-keyword: #c678dd;
+    --cm-function: #56a8f5;
+    --cm-regex: #d19a66;
+    --cm-border: rgba(0, 0, 0, 0.2);
+}
+
+.dark {
+    --cm-text: #f8f8f2;
+    --cm-selection: #44475a;
+    --cm-comment: #6272a4;
+    --cm-punctuation: #f8f8f2;
+    --cm-property: #bd93f9;
+    --cm-string: #f1fa8c;
+    --cm-operator: #f8f8f2;
+    --cm-keyword: #ff79c6;
+    --cm-function: #50fa7b;
+    --cm-regex: #ffb86c;
+    --cm-border: rgba(255, 255, 255, 0.2);
+}
+
+.mdxeditor {
+    padding-inline: 1rem;
+    position: relative;
+    --baseBase: var(--main);
+    --basePageBg: var(--main);
+    --baseText: var(--foreground);
+    --baseTextActive: var(--main);
+    --baseTextContrast: var(--main-foreground);
+    --baseBorderHover: lab(from var(--main-foreground) l a b / 0.35);
+
+    .cm-editor {
+        font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+        background: var(--secondary-background);
+    }
+
+    .cm-scroller {
+        border: 1px solid var(--cm-border);
+        border-radius: 0.75rem;
+        background: var(--secondary-background);
+    }
+
+    .cm-content {
+        color: var(--cm-text);
+        caret-color: var(--cm-text);
+        line-height: 1.6;
+        padding: 0.75rem 1rem;
+    }
+
+    .cm-gutters {
+        background: var(--secondary-background);
+        border-right: 1px solid var(--cm-border);
+        color: var(--cm-comment);
+    }
+
+    .cm-lineNumbers .cm-gutterElement {
+        font-size: 0.75rem;
+        color: var(--cm-comment);
+    }
+
+    .cm-activeLine {
+        background: color-mix(in srgb, var(--cm-selection) 60%, transparent);
+    }
+
+    .cm-selectionBackground,
+    .cm-focused .cm-selectionBackground {
+        background: var(--cm-selection) !important;
+    }
+
+    .cm-comment {
+        color: var(--cm-comment);
+    }
+
+    .cm-keyword,
+    .cm-qualifier,
+    .cm-tag {
+        color: var(--cm-keyword);
+    }
+
+    .cm-operator,
+    .cm-punctuation,
+    .cm-bracket {
+        color: var(--cm-punctuation);
+    }
+
+    .cm-property,
+    .cm-atom,
+    .cm-number,
+    .cm-string,
+    .cm-string-2,
+    .cm-attribute {
+        color: var(--cm-string);
+    }
+
+    .cm-variable,
+    .cm-variable-2,
+    .cm-variable-3,
+    .cm-def,
+    .cm-builtin,
+    .cm-type,
+    .cm-function {
+        color: var(--cm-function);
+    }
+
+    .cm-meta,
+    .cm-invalidchar {
+        color: var(--cm-comment);
+    }
+
+    .mdxeditor-contenteditable-wrapper {
+        .mdx-content {
+            color: var(--foreground);
+
+            ul {
+                margin-left: calc(var(--spacing) * 6);
+                list-style: disc;
+            }
+
+            ol {
+                margin-left: calc(var(--spacing) * 6);
+                list-style: decimal;
+            }
+
+            h1 {
+                scroll-margin: calc(var(--spacing) * 20);
+                font-size: var(--text-4xl);
+                line-height: var(--text-4xl--line-height);
+                font-weight: 800;
+                letter-spacing: var(--tracking-tight);
+            }
+            h2 {
+                scroll-margin: calc(var(--spacing) * 20);
+                padding-bottom: calc(var(--spacing) * 2);
+                font-size: var(--text-3xl);
+                line-height: var(--text-3xl--line-height);
+                font-weight: 600;
+                letter-spacing: var(--tracking-tight);
+                margin-top: calc(var(--spacing) * 6);
+            }
+            h2:first-child {
+                margin-top: 0;
+            }
+            h3 {
+                scroll-margin: calc(var(--spacing) * 20);
+                font-size: var(--text-2xl);
+                line-height: var(--text-2xl--line-height);
+                font-weight: 600;
+                letter-spacing: var(--tracking-tight);
+                margin-top: calc(var(--spacing) * 6);
+            }
+            h3:first-child {
+                margin-top: 0;
+            }
+            h4 {
+                scroll-margin: calc(var(--spacing) * 20);
+                font-size: var(--text-xl);
+                line-height: var(--text-xl--line-height);
+                font-weight: 600;
+                letter-spacing: var(--tracking-tight);
+                margin-top: calc(var(--spacing) * 6);
+            }
+            h4:first-child {
+                margin-top: 0;
+            }
+            h5 {
+                scroll-margin: calc(var(--spacing) * 20);
+                font-size: var(--text-lg);
+                line-height: var(--text-lg--line-height);
+                font-weight: 600;
+                letter-spacing: var(--tracking-tight);
+                margin-top: calc(var(--spacing) * 6);
+            }
+            h5:first-child {
+                margin-top: 0;
+            }
+            h6 {
+                scroll-margin: calc(var(--spacing) * 20);
+                font-size: var(--text-base);
+                line-height: var(--text-base--line-height);
+                font-weight: 600;
+                letter-spacing: var(--tracking-tight);
+                margin-top: calc(var(--spacing) * 6);
+            }
+            h6:first-child {
+                margin-top: 0;
+            }
+
+            p {
+                line-height: 2rem;
+
+                &:not(:first-child) {
+                    margin-top: calc(var(--spacing) * 6);
+                }
+            }
+        }
+
+        div[class*="codeMirrorWrapper"] {
+            border: none;
+            padding: 0;
+        }
+
+        a[href] {
+            color: var(--main);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        code > span {
+            background-color: transparent;
+        }
+
+        table {
+            --baseBgActive: var(--border);
+        }
+
+        [role="checkbox"] {
+            &:before {
+                border-color: var(--main);
+            }
+
+            &[aria-checked="true"]:before {
+                background-color: var(--main);
+            }
+
+            &:after {
+                border-color: var(--main-foreground);
+            }
+        }
+    }
+
+    .mdx-toolbar {
+        background-color: var(--main);
+        position: sticky;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+}

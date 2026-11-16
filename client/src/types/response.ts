@@ -1,0 +1,3 @@
+interface IOperationResult {
+  success: boolean;
+}

@@ -73,12 +73,26 @@ With Mau, you can deploy your application in just a few clicks, allowing you to 
 Estimate deployment Gas
 
 ```bash
-cast estimate --rpc-url https://eth-sepolia.g.alchemy.com/v2/alch_6LG5m1nOWDMgUwbyIFZvS \
+cast estimate --rpc-url "$JSON_RPC_PROVIDER_URL" \
   --from 0xe2618dbfc0559aa236342d1a959852dcae909064 \
-  --create "$(forge inspect FLRegistry bytecode)" \
-  'constructor(string,uint256,uint256,uint256,uint256,uint256)' \
-  '0x0' 0 0 0 0 0
+  --create "$(forge inspect FLRegistry bytecode)"
 ```
+
+The deployment script registers a bootstrap model after deploying the registry.
+`make setup` also registers the configured `INITIAL_MODEL_HASH` on-chain and
+records its transaction status in the database. The API signer must be the
+contract owner: configure `BLOCKCHAIN_PRIVATE_KEY` in the server runtime
+environment alongside `JSON_RPC_URL` and `FL_REGISTRY_ADDRESS`. Never commit
+the private key. After contract changes, run `forge build` before building the
+API so the ignored ABI artifact is regenerated. Apply the new database
+migration before starting the API. Existing contract deployments require
+redeployment to support the updated interface.
+
+API responses include `gasUsed` as a decimal string of gas units. Job totals
+sum all mined contract transactions associated with that job; round totals sum
+model-update and round-completion transactions for that round. Reverted mined
+transactions count toward gas usage, while pending transactions are omitted
+until their receipts are available.
 
 ## Resources
 

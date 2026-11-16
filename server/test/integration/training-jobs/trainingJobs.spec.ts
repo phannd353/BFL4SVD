@@ -9,6 +9,7 @@ import { PrismaService } from '@/infrastructure/database';
 import { ROLES } from '@/lib/permissions';
 import { ClientService } from '@/modules/clients/client.service';
 import { TrainingJobsService } from '@/modules/training-jobs/training-jobs.service';
+import { TrainingRoundsService } from '@/modules/training-rounds/training-rounds.service';
 import { AuthHelper } from '../helper/auth.helper';
 import { createTestingAppModule } from '../helper/app.helper';
 import { InfrastructureHelper } from '../helper/infrastructure.helper';
@@ -22,6 +23,7 @@ describe(
     let prisma: PrismaService;
     let clientService: ClientService;
     let service: TrainingJobsService;
+    let roundsService: TrainingRoundsService;
     let ownerId: string;
     let otherUserId: string;
     let participantUserId: string;
@@ -35,6 +37,7 @@ describe(
       prisma = app.get(PrismaService);
       clientService = app.get(ClientService);
       service = app.get(TrainingJobsService);
+      roundsService = app.get(TrainingRoundsService);
 
       const authHelper = app.get(AuthHelper);
       const users = await Promise.all(
@@ -201,36 +204,38 @@ describe(
           {
             jobId: job.id,
             roundNumber: 2,
-            modelHash: 'model-2',
-            blockchainUpdateId: '22',
+            aggregatedModelHash: 'model-2',
             metrics: { accuracy: 0.95 },
           },
           {
             jobId: job.id,
             roundNumber: 1,
-            modelHash: 'model-1',
-            blockchainUpdateId: '11',
+            aggregatedModelHash: 'model-1',
             metrics: { accuracy: 0.8 },
           },
-          { jobId: job.id, roundNumber: 3, modelHash: 'model-3' },
+          { jobId: job.id, roundNumber: 3, aggregatedModelHash: 'model-3' },
         ],
       });
 
-      await expect(service.getTrainingJobRounds(job.id)).resolves.toEqual([
-        expect.objectContaining({ roundNumber: 1 }),
-        expect.objectContaining({ roundNumber: 2 }),
-        expect.objectContaining({ roundNumber: 3 }),
-      ]);
-      await expect(service.getTrainingJobMetrics(job.id)).resolves.toEqual([
+      await expect(roundsService.getTrainingJobRounds(job.id)).resolves.toEqual(
+        [
+          expect.objectContaining({ roundNumber: 1 }),
+          expect.objectContaining({ roundNumber: 2 }),
+          expect.objectContaining({ roundNumber: 3 }),
+        ],
+      );
+      await expect(
+        roundsService.getTrainingJobMetrics(job.id),
+      ).resolves.toEqual([
         expect.objectContaining({
           roundNumber: 1,
           metrics: { accuracy: 0.8 },
-          blockchainUpdateId: '11',
+          aggregatedModelHash: 'model-1',
         }),
         expect.objectContaining({
           roundNumber: 2,
           metrics: { accuracy: 0.95 },
-          blockchainUpdateId: '22',
+          aggregatedModelHash: 'model-2',
         }),
       ]);
     });
@@ -240,10 +245,10 @@ describe(
         service.getTrainingJobById('missing-job'),
       ).rejects.toMatchObject({ status: 404 });
       await expect(
-        service.getTrainingJobRounds('missing-job'),
+        roundsService.getTrainingJobRounds('missing-job'),
       ).rejects.toMatchObject({ status: 404 });
       await expect(
-        service.getTrainingJobMetrics('missing-job'),
+        roundsService.getTrainingJobMetrics('missing-job'),
       ).rejects.toMatchObject({ status: 404 });
       await expect(
         service.getTrainingJobLogs('missing-job'),

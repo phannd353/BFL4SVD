@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsDateString,
   Max,
   Min,
   MinLength,
@@ -56,5 +57,13 @@ export class CreateTrainingJobDto {
   @IsOptional()
   @IsString()
   @MinLength(1)
-  modelHash?: string;
+  initialModelHash: string;
+
+  @ApiProperty({ example: '2026-11-01T09:00:00.000Z' })
+  @IsDateString()
+  publishAt!: string;
+
+  @ApiProperty({ example: '2026-11-01T10:00:00.000Z' })
+  @IsDateString()
+  startAt!: string;
 }

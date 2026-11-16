@@ -54,4 +54,11 @@ export class UserBaseDto {
     message: 'Vai trò phải là chuỗi',
   })
   role!: string;
+
+  @Expose()
+  @ApiProperty({
+    description: 'Địa chỉ blockchain của người dùng',
+  })
+  @IsString({ message: 'Địa chỉ blockchain phải là chuỗi' })
+  walletAddress?: string;
 }

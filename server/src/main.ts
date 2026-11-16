@@ -1,7 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
-import { ConfigService, middleware } from './common';
+import {
+  ConfigService,
+  middleware,
+  OperationMetadataDto,
+  PaginationMetadataDto,
+} from './common';
+import { initSwagger } from './common/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
@@ -12,12 +18,12 @@ async function bootstrap() {
   middleware(app);
 
   app.setGlobalPrefix('/api/v1');
-  // await initSwagger({
-  //    app,
-  //    name: 'phannd.me API Documentation',
-  //    isStartEndpoint: true,
-  //    extraModels: [OperationMetadataDto, PaginationMetadataDto],
-  //  });
+  await initSwagger({
+    app,
+    name: 'bfl4svd API Documentation',
+    isStartEndpoint: true,
+    extraModels: [OperationMetadataDto, PaginationMetadataDto],
+  });
 
   app.enableShutdownHooks();
   const port = configService.get('port') || 3000;

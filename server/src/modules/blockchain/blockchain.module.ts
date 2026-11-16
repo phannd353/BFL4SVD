@@ -7,5 +7,6 @@ import { ContractService } from '@/common';
 @Module({
   controllers: [BlockchainController],
   providers: [BlockchainService, ContractService],
+  exports: [BlockchainService],
 })
 export class BlockchainModule {}

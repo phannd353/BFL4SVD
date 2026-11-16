@@ -1,3 +1,15 @@
+x-superexec-runtime: &superexec-runtime
+  volumes:
+    - type: bind
+      source: ${PROJECT_DIR:-../..}/fl/data
+      target: /app/fl/data
+      read_only: false
+
+  build:
+    context: ${PROJECT_DIR:-../..}
+    dockerfile: server/infrastructure/flwr.Dockerfile
+  image: bfl4svd-superexec:${BFL4SVD_VERSION:-0.1.0}
+
 services:
   bfl4svd-pgdb:
     image: postgres:alpine
@@ -10,6 +22,8 @@ services:
       - '5432:5432'
     volumes:
       - bfl4svd-pgdb-data:/var/lib/postgresql
+    networks:
+      - bfl4svd-network
 
   bfl4svd-rdb:
     image: redis:alpine
@@ -18,7 +32,52 @@ services:
       - '6379:6379'
     volumes:
       - bfl4svd-rdb-data:/data
+    networks:
+      - bfl4svd-network
+
+  bfl4svd-superlink:
+    image: flwr/superlink:${FLWR_VERSION:-1.42.0}
+    command:
+      - --insecure
+      - --isolation
+      - process
+      - --host
+      - 0.0.0.0
+      - --port
+      - '8000'
+    ports:
+      - 8000:8000
+    networks:
+      - bfl4svd-network
+
+  # create a SuperExec service for SuperLink to execute ServerApps
+  bfl4svd-superexec-serverapp:
+    <<: *superexec-runtime
+    volumes:
+      - type: bind
+        source: ${PROJECT_DIR:-../..}/fl/data
+        target: /app/fl/data
+    command:
+      - --insecure
+      - --runtime-api-address
+      - bfl4svd-superlink:8000
+    environment:
+      # Credential the ServerApp presents on its API callbacks. Must equal the
+      # API's FLWR_SERVER_TOKEN (>= 32 characters). Keep it out of Flower run config.
+      FLWR_SERVER_TOKEN: ${FLWR_SERVER_TOKEN:?Set FLWR_SERVER_TOKEN to the same value as the API's FLWR_SERVER_TOKEN (at least 32 characters)}
+      FLWR_MODEL_DIR: /app/fl/data/model
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    restart: on-failure:3
+    networks:
+      - bfl4svd-network
+    depends_on:
+      - bfl4svd-superlink
 
 volumes:
   bfl4svd-pgdb-data:
   bfl4svd-rdb-data:
+
+networks:
+  bfl4svd-network:
+    driver: bridge

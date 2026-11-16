@@ -1,0 +1,56 @@
+# This venv must be prepared for the Python runtime in the Flower image.
+x-superexec-runtime: &superexec-runtime
+  volumes:
+    - type: bind
+      source: ${PROJECT_DIR:-../..}/fl/data
+      target: /app/fl/data
+      read_only: true
+
+  build:
+    context: ${PROJECT_DIR:-../..}
+    dockerfile: server/infrastructure/flwr.Dockerfile
+  image: bfl4svd-superexec:${BFL4SVD_VERSION:-0.1.0}
+
+services:
+  # create two SuperNode services with different node configs
+  bfl4svd-supernode-0:
+    image: flwr/supernode:${FLWR_VERSION:-1.42.0}
+    command:
+      - --insecure
+      - --superlink
+      - bfl4svd-superlink:8000
+      - --host
+      - 0.0.0.0
+      - --port
+      - ${FLWR_CLIENT_PORT:-9005}
+      - --isolation
+      - process
+      - --node-config
+      - 'partition-id=0 num-partitions=2 data-dir="${FL_DATA_DIR:-/app/fl/data/federated/iid/client_0}" auth-token="${AUTH_TOKEN}"'
+    networks:
+      - bfl4svd-flwr-network
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+  # create one SuperExec service for each SuperNode to execute ClientApps
+  bfl4svd-superexec-clientapp-0:
+    <<: *superexec-runtime
+    command:
+      - --insecure
+      - --runtime-api-address
+      - bfl4svd-supernode-0:${FLWR_CLIENT_PORT:-9005}
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+    stop_signal: SIGINT
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    networks:
+      - bfl4svd-flwr-network
+    depends_on:
+      - bfl4svd-supernode-0
+
+networks:
+  bfl4svd-flwr-network:
+    driver: bridge

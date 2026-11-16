@@ -35,7 +35,7 @@ export class CommonModule extends ConfigurableModuleClass {
                 url: config.get('redis.url') as string,
               } as RedisClientOptions),
             ],
-            ttl: config.get('env') === 'development' ? -1 : 30 * 1000, // 30 secs, short caching time for gateway route auto caching
+            ttl: config.get('env') === 'development' ? 1 : 30 * 1000, // 30 secs, short caching time for gateway route auto caching
             max: 100, // Maximum number of items in cache
           }),
           isGlobal: true,

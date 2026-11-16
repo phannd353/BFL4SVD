@@ -58,6 +58,13 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 artifacts
 cache
 broadcast
+anvil/*
+!anvil/.gitkeep
 prisma/generated
 prisma/migrations
+!prisma/migrations/
+prisma/migrations/*
+!prisma/migrations/20261113150000_blockchain_gas_tracking/
+!prisma/migrations/20261113150000_blockchain_gas_tracking/migration.sql
 lib/*
+api/*
