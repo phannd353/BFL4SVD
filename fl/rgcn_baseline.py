@@ -35,19 +35,21 @@ def main() -> None:
     parser.add_argument("--data", type=str, required=True, help="Path to JSON dataset.")
     parser.add_argument("--output", type=str, default="token_gcn_checkpoint.pt")
     parser.add_argument("--epochs", type=int, default=50)
-    parser.add_argument("--batch-size", type=int, default=32)
-    parser.add_argument("--embedding-dim", type=int, default=128)
-    parser.add_argument("--hidden-dim", type=int, default=128)
-    parser.add_argument("--max-vocab-size", type=int, default=20000)
-    parser.add_argument("--max-tokens", type=int, default=512)
-    parser.add_argument("--context-window", type=int, default=2)
+    parser.add_argument("--batch-size", "batch_size", type=int, default=32)
+    parser.add_argument("--embedding-dim", "embedding_dim", type=int, default=128)
+    parser.add_argument("--hidden-dim", "hidden_dim", type=int, default=128)
+    parser.add_argument("--max-vocab-size", "max_vocab_size", type=int, default=20000)
+    parser.add_argument("--max-tokens", "max_tokens", type=int, default=512)
+    parser.add_argument("--context-window", "context_window", type=int, default=2)
     parser.add_argument(
         "--normalize-tokens",
+        "normalize_tokens",
         action="store_true",
         help="Normalize non-security identifiers and literals before graph creation.",
     )
     parser.add_argument(
         "--no-structural-edges",
+        "no_structural_edges",
         dest="structural_edges",
         action="store_false",
         help="Disable matching-delimiter edges.",
@@ -55,25 +57,29 @@ def main() -> None:
     parser.set_defaults(structural_edges=True)
     parser.add_argument(
         "--ast-edges",
+        "ast_edges",
         action="store_true",
         help="Add heuristic AST hierarchy edges.",
     )
     parser.add_argument(
         "--data-flow-edges",
+        "data_flow_edges",
         action="store_true",
         help="Add heuristic identifier definition/use edges.",
     )
-    parser.add_argument("--learning-rate", type=float, default=1e-3)
-    parser.add_argument("--weight-decay", type=float, default=1e-4)
-    parser.add_argument("--dropout", type=float, default=0.30)
-    parser.add_argument("--patience", type=int, default=10)
+    parser.add_argument("--learning-rate", "learning_rate", type=float, default=1e-3)
+    parser.add_argument("--weight-decay", "weight_decay", type=float, default=1e-4)
+    parser.add_argument("--dropout", "dropout", type=float, default=0.30)
+    parser.add_argument("--patience", "patience", type=int, default=10)
     parser.add_argument(
         "--no-class-weights",
+        "no_class_weights",
         action="store_true",
         help="Train with unweighted cross-entropy.",
     )
     parser.add_argument(
         "--threshold-metric",
+        "threshold_metric",
         choices=["mcc", "macro_f1"],
         default="mcc",
         help="Validation metric used to select the classification threshold.",

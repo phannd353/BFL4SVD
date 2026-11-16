@@ -19,6 +19,8 @@ def config_value[T](context: Context, name: str, default: T) -> T:
 
     if name in context.node_config:
         value = context.node_config[name]
+    elif name.replace("-", "_") in context.node_config:
+        value = context.node_config[name.replace("-", "_")]
     else:
         value = context.run_config.get(name, default)
 
@@ -113,12 +115,12 @@ def create_local_state(
 ):
     set_seed(config_value(context, "seed", 42))
     vocabulary = load_vocabulary(
-        config_value(context, "vocabulary", "shared_vocabulary.json")
+        config_value(context, "vocabulary", "data/federated/iid/vocabulary.json")
     )
     model = create_model(
         vocabulary_size=len(vocabulary),
-        embedding_dim=config_value(context, "embedding_dim", 128),
-        hidden_dim=config_value(context, "hidden_dim", 128),
+        embedding_dim=config_value(context, "embedding-dim", 128),
+        hidden_dim=config_value(context, "hidden-dim", 128),
         dropout=config_value(context, "dropout", 0.30),
     )
     device = torch.device(
@@ -134,17 +136,17 @@ def create_local_state(
         train_data_path=train_data_path,
         validation_data_path=validation_data_path,
         vocabulary=vocabulary,
-        batch_size=config_value(context, "batch_size", 32),
-        max_tokens=config_value(context, "max_tokens", 512),
-        context_window=config_value(context, "context_window", 4),
-        normalize_tokens=config_value(context, "normalize_tokens", False),
-        structural_edges=config_value(context, "structural_edges", True),
-        ast_edges=config_value(context, "ast_edges", False),
-        data_flow_edges=config_value(context, "data_flow_edges", False),
+        batch_size=config_value(context, "batch-size", 32),
+        max_tokens=config_value(context, "max-tokens", 512),
+        context_window=config_value(context, "context-window", 4),
+        normalize_tokens=config_value(context, "normalize-tokens", False),
+        structural_edges=config_value(context, "structural-edges", True),
+        ast_edges=config_value(context, "ast-edges", False),
+        data_flow_edges=config_value(context, "data-flow-edges", False),
     )
     criterion = build_criterion(
         device,
-        config_value(context, "class_weights", True),
+        config_value(context, "class-weights", True),
         train_loader,
     )
     return model, device, train_loader, validation_loader, criterion

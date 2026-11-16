@@ -203,6 +203,8 @@ def find_best_threshold(
 ) -> tuple[float, float]:
     """Choose a decision threshold using validation predictions only."""
 
+    if metric == "macro-f1":
+        metric = "macro_f1"
     if metric not in {"mcc", "macro_f1"}:
         raise ValueError("metric must be 'mcc' or 'macro_f1'.")
 

@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "devign-federated"
 version = "0.1.0"
 description = "Federated Learning with PyTorch and Flower (Quickstart Example)"
-license = {file = "../LICENSE"}
+license = { file = "../LICENSE" }
 dependencies = [
     "flwr",
     "numpy",
@@ -15,45 +15,43 @@ dependencies = [
     "torch-geometric",
     "tree-sitter",
     "tree-sitter-c",
-    "ray"
+    "ray",
 ]
 
 [tool.flwr.app]
 publisher = "devign"
-fab-include = [
-    "pyproject.toml",
-    "fl_client.py",
-    "fl_server.py",
-    "src/",
-]
+fab-include = ["pyproject.toml", "fl_client.py", "fl_server.py", "src/"]
 
 [tool.flwr.app.components]
 serverapp = "fl_server:app"
 clientapp = "fl_client:app"
 
 [tool.flwr.app.config]
-vocabulary = "data/federated/vocabulary.json"
+data-dir = "data/federated/iid/server"
+vocabulary = "data/federated/iid/vocabulary.json"
 rounds = 30
-min_clients = 2
-local_epochs = 1
-batch_size = 32
-learning_rate = 0.001
-weight_decay = 0.0001
-proximal_mu = 0.001
-embedding_dim = 128
-hidden_dim = 128
+min-clients = 2
+local-epochs = 1
+batch-size = 32
+learning-rate = 0.001
+weight-decay = 0.0001
+proximal-mu = 0.001
+embedding-dim = 128
+hidden-dim = 128
 dropout = 0.3
-max_tokens = 512
-context_window = 4
-structural_edges = true
-ast_edges = false
-data_flow_edges = false
-class_weights = true
-threshold_metric = "macro_f1"
-min_client_score = 0.5
-min_clients_to_aggregate = 2
+max-tokens = 512
+context-window = 4
+structural-edges = true
+ast-edges = false
+data-flow-edges = false
+class-weights = true
+threshold-metric = "macro-f1"
+min-client-score = 0.5
+min-clients-to-aggregate = 2
 seed = 42
-mode = 'iid'
+training-job-id = ""
+initial-model-hash = ""
+api-endpoint = ""
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]

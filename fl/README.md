@@ -379,19 +379,49 @@ overfitting and client drift:
 flwr run . --stream \
   --run-config 'mode="iid"' \
   --run-config 'vocabulary="data/federated/iid/vocabulary.json"' \
-  --run-config 'local_epochs=1' \
+  --run-config 'local-epochs=1' \
   --run-config 'rounds=30' \
-  --run-config 'learning_rate=0.001' \
-  --run-config 'proximal_mu=0.001' \
-  --run-config 'context_window=4' \
-  --run-config 'class_weights=true' \
-  --run-config 'threshold_metric="macro_f1"' \
-  --run-config 'min_client_score=0.5' \
-  --run-config 'min_clients_to_aggregate=2'
+  --run-config 'learning-rate=0.001' \
+  --run-config 'proximal-mu=0.001' \
+  --run-config 'context-window=4' \
+  --run-config 'class-weights=true' \
+  --run-config 'threshold-metric="macro-f1"' \
+  --run-config 'min-client-score=0.5' \
+  --run-config 'min-clients-to-aggregate=2'
 ```
 
 Compare IID and non-IID runs with the same seed and hyperparameters. Choose
 settings using validation metrics.
+
+### BFL4SVD API integration
+
+The Flower client reports each local model update using the participant's
+`auth-token` node configuration. The server opens each round before training,
+stores every aggregate as a hash-named state-dictionary artifact, reports the
+round and metrics, then finalizes the job with the final round's model hash.
+The best server-validation checkpoint remains the separately saved evaluation
+checkpoint; it does not replace the API's final-round model lineage.
+
+Create an initial RGCN model with the same vocabulary and architecture settings
+as the run. Keep the model directory shared with the Flower ServerApp
+(`FLWR_MODEL_DIR` is `/app/fl/data/model` in the provided server compose
+configuration):
+
+```bash
+FLWR_MODEL_DIR=../fl/data/model python3 init.py
+```
+
+Register the printed hash as the initial model using the server setup script.
+API-managed runs receive `training-job-id`, `initial-model-hash`, and
+`api-endpoint` in Flower run config. The ServerApp reads its API credential
+from `FLWR_SERVER_TOKEN`; participant credentials must remain in each Flower
+node's `auth-token` config. Never put either credential in run config. Clients
+receive their mounted dataset directory as `data-dir` node config. For a
+non-IID run, set both `vocabulary` and the server `data-dir` run config to that
+mode's generated files. For API-scheduled runs, set `FLWR_APP_PATH` to this
+Flower app and ensure the SuperExec runtime can read the server vocabulary,
+validation, and test files at the configured paths; the scheduler and Docker
+mount configuration are not changed by this FL1 workflow update.
 
 ## Results
 
