@@ -2,143 +2,114 @@
 
 \section{Lý do chọn đề tài}
 
-Trong những năm gần đây, sự phát triển của trí tuệ nhân tạo (Artificial Intelligence -- AI), đặc biệt là học máy (Machine Learning -- ML) và học sâu (Deep Learning -- DL), đã mang lại nhiều tiến bộ trong việc phân tích dữ liệu và giải quyết các bài toán phức tạp. Tuy nhiên, quá trình huấn luyện các mô hình học máy thường đòi hỏi lượng dữ liệu lớn, trong khi dữ liệu thực tế có thể được phân tán tại nhiều tổ chức, hệ thống hoặc thiết bị khác nhau. Bên cạnh đó, các yêu cầu về quyền riêng tư, bảo mật thông tin và quy định quản lý dữ liệu ngày càng được chú trọng, khiến việc tập trung toàn bộ dữ liệu về một máy chủ để huấn luyện mô hình trở nên khó khăn.
+Trong bối cảnh chuyển đổi số và sự phát triển mạnh mẽ của công nghệ thông tin, phần mềm ngày càng
+đóng vai trò quan trọng trong hầu hết các lĩnh vực của đời sống, từ tài chính, y tế, thương mại
+điện tử đến các hệ thống hạ tầng và dịch vụ công nghệ. Cùng với sự gia tăng về quy mô và độ phức
+tạp của phần mềm, các vấn đề liên quan đến an toàn và bảo mật cũng ngày càng trở nên đáng quan tâm.
+Trong đó, lỗ hổng phần mềm (Software Vulnerability) là một trong những nguyên nhân chính dẫn đến
+các cuộc tấn công mạng, rò rỉ dữ liệu và gây ảnh hưởng nghiêm trọng đến tính bảo mật, toàn vẹn và
+khả dụng của hệ thống. Do đó, việc nghiên cứu và phát triển các phương pháp \ac{PHLHPM} có ý nghĩa
+quan trọng trong việc nâng cao chất lượng và đảm bảo an toàn cho các sản phẩm phần mềm.
 
-Federated Learning (FL), hay học liên kết, là một phương pháp học máy phân tán cho phép nhiều bên cùng tham gia huấn luyện một mô hình chung mà không cần chia sẻ trực tiếp dữ liệu gốc. Thay vì truyền dữ liệu đến một máy chủ trung tâm, mỗi bên (client) thực hiện quá trình huấn luyện trên dữ liệu cục bộ và chỉ gửi các tham số hoặc cập nhật mô hình (model updates) đến máy chủ điều phối (server) để tổng hợp. Cách tiếp cận này góp phần giảm thiểu việc trao đổi dữ liệu nhạy cảm và tạo điều kiện cho các tổ chức hợp tác xây dựng mô hình học máy trong khi vẫn duy trì quyền kiểm soát dữ liệu của mình.
+Các phương pháp \ac{PHLHPM} truyền thống thường dựa trên phân tích tĩnh (Static Analysis), phân
+tích động (Dynamic Analysis) hoặc các tập luật và mẫu nhận diện được định nghĩa trước. Mặc dù những
+phương pháp này đã đạt được nhiều kết quả nhất định, chúng vẫn tồn tại một số hạn chế trong việc
+phát hiện các lỗ hổng phức tạp, đặc biệt khi mã nguồn có cấu trúc đa dạng và liên tục thay đổi.
+Trong những năm gần đây, sự phát triển của học máy \ac{ML} và học sâu \ac{DL} đã mở ra hướng tiếp
+cận mới cho bài toán \ac{PHLHPM}. Thay vì phụ thuộc hoàn toàn vào các luật được xây dựng thủ công,
+các mô hình học máy có thể học những đặc trưng từ mã nguồn để nhận diện các mẫu có khả năng liên
+quan đến lỗ hổng bảo mật. Tuy nhiên, việc xây dựng các mô hình này thường đòi hỏi tập dữ liệu lớn
+và đa dạng, trong khi dữ liệu mã nguồn thực tế thường được lưu trữ phân tán tại nhiều tổ chức và có
+thể chứa các thông tin độc quyền hoặc nhạy cảm. Việc tập trung dữ liệu từ nhiều nguồn về một máy
+chủ duy nhất để huấn luyện mô hình có thể phát sinh những rủi ro về quyền riêng tư, bảo mật và
+quyền sở hữu trí tuệ, đồng thời gặp phải các hạn chế về chính sách chia sẻ dữ liệu.
 
-Mặc dù mang lại nhiều lợi ích về quyền riêng tư và khả năng học tập phân tán, Federated Learning vẫn tồn tại những thách thức liên quan đến tính minh bạch, khả năng giám sát và truy vết quá trình huấn luyện. Trong một hệ thống FL, nhiều client có thể tham gia vào các vòng huấn luyện (training rounds) khác nhau, gửi các bản cập nhật mô hình tại những thời điểm khác nhau và đóng góp vào quá trình hình thành mô hình toàn cục (global model). Tuy nhiên, việc quản lý và xác định chính xác lịch sử đóng góp của từng client không phải lúc nào cũng được hỗ trợ đầy đủ bởi cơ chế FL truyền thống.
+\ac{FL}, hay học liên kết, là một phương pháp học máy phân tán cho phép nhiều bên cùng tham gia huấn luyện một mô hình chung mà không cần chia sẻ trực tiếp dữ liệu gốc. Thay vì
+truyền dữ liệu đến một máy chủ trung tâm, mỗi bên (client) thực hiện quá trình huấn luyện trên dữ
+liệu cục bộ và chỉ gửi các bản cập nhật mô hình (model updates) đến máy chủ điều phối (server) để
+tổng hợp. Nhờ đó, \ac{FL} tạo điều kiện cho các tổ chức hợp tác xây dựng mô hình \ac{PHLHPM} mà vẫn duy trì dữ liệu trong phạm vi quản lý của mình. Đây là một hướng tiếp
+cận phù hợp đối với những bài toán mà dữ liệu được phân tán và khó chia sẻ trực tiếp giữa các bên.
 
-Đặc biệt, trong trường hợp hệ thống phát hiện những thay đổi bất thường về hiệu suất mô hình, chất lượng dự đoán hoặc các bản cập nhật không đáng tin cậy, việc xác định nguồn gốc của những thay đổi này có thể gặp nhiều khó khăn. Hệ thống cần có khả năng trả lời những câu hỏi như: Client nào đã tham gia vào một vòng huấn luyện cụ thể? Client đã gửi bản cập nhật mô hình vào thời điểm nào? Bản cập nhật đó có được máy chủ tiếp nhận và tổng hợp hay không? Phiên bản mô hình toàn cục được tạo ra từ những đóng góp nào? Nếu các thông tin này không được ghi nhận một cách có hệ thống và đáng tin cậy, quá trình kiểm tra, đối chiếu và điều tra sự cố sẽ trở nên phức tạp.
+Mặc dù có ưu điểm trong việc hạn chế trao đổi dữ liệu gốc, \ac{FL} vẫn tồn tại những thách thức
+liên quan đến tính minh bạch, khả năng giám sát và truy vết quá trình huấn luyện. Trong một hệ
+thống FL, nhiều client có thể tham gia vào các vòng huấn luyện (training rounds) khác nhau, thực
+hiện huấn luyện trên dữ liệu riêng và gửi các bản cập nhật mô hình đến server. Tuy nhiên, việc ghi
+nhận và xác minh lịch sử đóng góp của từng client không phải lúc nào cũng được hỗ trợ đầy đủ. Khi
+mô hình toàn cục (global model) có những thay đổi bất thường về hiệu suất hoặc xuất hiện các kết
+quả dự đoán không mong muốn, việc xác định client nào đã tham gia, bản cập nhật nào đã được tiếp
+nhận và những cập nhật đó đã ảnh hưởng như thế nào đến mô hình toàn cục có thể gặp nhiều khó khăn.
 
-Vấn đề này càng trở nên đáng quan tâm trong các ứng dụng yêu cầu độ tin cậy cao, đặc biệt khi môi trường huấn luyện không thể mặc định rằng tất cả các thành phần tham gia đều đáng tin cậy. Không chỉ các client có thể gửi dữ liệu hoặc cập nhật mô hình không hợp lệ, mà cả môi trường điều phối và quản lý quá trình huấn luyện cũng có thể trở thành đối tượng cần được giám sát. Nếu toàn bộ lịch sử hoạt động chỉ được lưu trữ trong cơ sở dữ liệu hoặc hệ thống nhật ký do một thành phần trung tâm quản lý, các bản ghi này vẫn có thể bị sửa đổi hoặc xóa bỏ bởi những thực thể có đủ quyền truy cập. Điều này làm hạn chế khả năng xác minh tính toàn vẹn của lịch sử huấn luyện khi xảy ra tranh chấp hoặc sự cố bảo mật.
+Bên cạnh đó, môi trường \ac{FL} không thể mặc định rằng tất cả các thành phần tham gia đều đáng tin
+cậy. Các client có thể gửi những bản cập nhật mô hình không hợp lệ hoặc bị can thiệp, trong khi máy
+chủ điều phối cũng có thể trở thành đối tượng cần được giám sát. Nếu thông tin về quá trình huấn
+luyện chỉ được lưu trữ trong cơ sở dữ liệu hoặc hệ thống nhật ký do một thành phần trung tâm quản
+lý, các bản ghi này vẫn có nguy cơ bị sửa đổi hoặc xóa bỏ bởi những thực thể có quyền truy cập phù
+hợp. Điều này làm hạn chế khả năng kiểm chứng lịch sử hoạt động và xác định nguồn gốc của các bản
+cập nhật khi xảy ra sự cố. Vì vậy, bên cạnh việc đảm bảo khả năng huấn luyện phân tán, việc xây
+dựng một cơ chế ghi nhận và truy vết đáng tin cậy cho quá trình \ac{FL} cũng là một vấn đề cần được
+quan tâm.
 
-Trong bối cảnh đó, Blockchain là một công nghệ tiềm năng để tăng cường khả năng truy vết và tính minh bạch cho Federated Learning. Với đặc điểm lưu trữ dữ liệu theo cấu trúc chuỗi khối, sử dụng các hàm băm mật mã và cơ chế đồng thuận giữa các nút tham gia, Blockchain có thể cung cấp một sổ cái ghi nhận các sự kiện quan trọng trong quá trình huấn luyện. Thông qua việc lưu trữ các thông tin như định danh client, thời điểm tham gia, vòng huấn luyện, mã băm của bản cập nhật mô hình và trạng thái xử lý, hệ thống có thể xây dựng lịch sử hoạt động có khả năng kiểm chứng và khó bị thay đổi trái phép.
+Blockchain là một công nghệ tiềm năng có thể hỗ trợ giải quyết vấn đề trên thông qua cơ chế lưu trữ
+dữ liệu phân tán, hàm băm mật mã và cấu trúc liên kết các khối dữ liệu. Các thông tin được ghi nhận
+trên Blockchain có khả năng kiểm chứng tính toàn vẹn và khó bị thay đổi trái phép khi hệ thống được
+triển khai với các cơ chế bảo mật và đồng thuận phù hợp. Khi kết hợp với \ac{FL}, Blockchain có thể
+đóng vai trò như một lớp ghi nhận và kiểm toán các sự kiện quan trọng trong quá trình huấn luyện,
+chẳng hạn như định danh client, thời điểm tham gia, vòng huấn luyện, mã băm của bản cập nhật mô
+hình và trạng thái xử lý. Thông qua đó, hệ thống có thể hỗ trợ truy xuất lịch sử đóng góp của từng
+client, xác minh tính toàn vẹn của các thông tin đã ghi nhận và tăng cường khả năng kiểm toán quá
+trình huấn luyện. Tuy nhiên, Blockchain không trực tiếp đảm bảo rằng các bản cập nhật được ghi nhận
+là hợp lệ hoặc không chứa hành vi độc hại; do đó, việc kết hợp cơ chế ghi nhận với các phương pháp
+kiểm tra và xác minh phù hợp là cần thiết.
 
-Việc kết hợp Blockchain với Federated Learning không nhằm thay thế cơ chế huấn luyện và tổng hợp mô hình hiện có, mà hướng đến bổ sung một lớp ghi nhận và kiểm toán độc lập cho các hoạt động quan trọng trong quá trình huấn luyện. Cách tiếp cận này có thể hỗ trợ xác minh nguồn gốc của các bản cập nhật mô hình, đối chiếu lịch sử tham gia của các client và nâng cao khả năng điều tra khi xảy ra sự cố. Tuy nhiên, cần phân biệt rằng tính bất biến của bản ghi Blockchain không đồng nghĩa với việc dữ liệu được ghi nhận luôn chính xác hoặc bản cập nhật mô hình luôn an toàn. Do đó, việc thiết kế cơ chế ghi nhận, xác minh và đối chiếu thông tin đóng vai trò quan trọng trong hệ thống đề xuất.
+Mặc dù đã có nhiều nghiên cứu khai thác \ac{FL} cho các bài toán học máy phân tán và ứng dụng
+Blockchain nhằm tăng cường tính bảo mật, minh bạch của hệ thống, việc kết hợp các công nghệ này
+trong một hệ thống \ac{PHLHPM} vẫn đặt ra những vấn đề cần được nghiên cứu và đánh giá. Đặc biệt,
+cần xem xét cách thức liên kết thông tin định danh của client với các sự kiện huấn luyện, cách ghi
+nhận và xác minh các bản cập nhật mô hình, cũng như mức độ ảnh hưởng của việc tích hợp Blockchain
+đến hiệu năng và chi phí vận hành của hệ thống. Đây là những khía cạnh quan trọng nhằm đánh giá
+tính khả thi của việc sử dụng Blockchain để tăng cường khả năng truy vết trong môi trường \ac{FL}.
 
-Mặc dù đã có nhiều nghiên cứu về Federated Learning và các phương pháp ứng dụng Blockchain nhằm cải thiện tính bảo mật, quyền riêng tư và độ tin cậy của hệ thống, khả năng truy vết chi tiết các hoạt động huấn luyện, đặc biệt là việc liên kết danh tính client, lịch sử đóng góp, thời điểm gửi cập nhật và phiên bản mô hình tương ứng, vẫn là một khía cạnh cần được nghiên cứu và đánh giá cụ thể trong phạm vi triển khai của đề tài.
-
-Xuất phát từ những vấn đề trên, đề tài ``Tăng cường khả năng truy vết trong Federated Learning sử dụng công nghệ Blockchain'' được lựa chọn nhằm nghiên cứu và xây dựng một giải pháp kết hợp giữa Federated Learning và Blockchain. Hệ thống hướng đến việc ghi nhận, xác minh và truy xuất lịch sử hoạt động của các client trong quá trình huấn luyện phân tán. Bên cạnh đó, đề tài sử dụng bài toán phát hiện lỗ hổng mã nguồn (Software Vulnerability Detection) làm trường hợp ứng dụng để triển khai và đánh giá tính khả thi của giải pháp đề xuất.
+Xuất phát từ những vấn đề trên, đề tài “Nghiên cứu và triển khai hệ thống \ac{PHLHPM} sử dụng học
+liên kết và chuỗi khối” được thực hiện nhằm nghiên cứu và xây dựng một hệ thống \ac{PHLHPM} dựa
+trên phương pháp \ac{FL}, kết hợp công nghệ Blockchain để tăng cường tính minh bạch, khả năng truy
+vết và kiểm chứng lịch sử huấn luyện. Hệ thống hướng đến việc cho phép nhiều client cùng tham gia
+huấn luyện mô hình trên dữ liệu cục bộ, đồng thời ghi nhận các sự kiện quan trọng trong quá trình
+huấn luyện nhằm hỗ trợ xác định nguồn gốc và kiểm tra tính toàn vẹn của các bản cập nhật mô hình.
+Qua đó, đề tài không chỉ nghiên cứu khả năng ứng dụng học liên kết vào bài toán \ac{PHLHPM} mà còn
+đánh giá tiềm năng của Blockchain trong việc nâng cao độ tin cậy và khả năng kiểm toán của môi
+trường huấn luyện học máy phân tán.
 
 \section{Mục tiêu nghiên cứu}
 
 \subsection{Mục tiêu tổng quát}
 
-Mục tiêu tổng quát của đề tài là nghiên cứu và xây dựng một giải pháp tích hợp công nghệ Blockchain vào hệ thống Federated Learning nhằm tăng cường khả năng truy vết, tính minh bạch và khả năng kiểm chứng lịch sử hoạt động trong quá trình huấn luyện mô hình học máy phân tán. Giải pháp tập trung vào việc ghi nhận các sự kiện quan trọng liên quan đến hoạt động của client, quá trình gửi và tiếp nhận các bản cập nhật mô hình, cũng như quá trình tổng hợp mô hình toàn cục. Thông qua việc sử dụng Blockchain để lưu trữ các bằng chứng và thông tin kiểm chứng cần thiết, hệ thống hướng đến hỗ trợ xác định nguồn gốc của các bản cập nhật, đối chiếu lịch sử huấn luyện và nâng cao khả năng kiểm toán khi xảy ra sự cố.
+Mục tiêu tổng quát của đề tài là nghiên cứu và triển khai hệ thống \ac{PHLHPM} sử dụng học liên kết
+(\ac{FL}) kết hợp với công nghệ chuỗi khối (Blockchain). Hệ thống hướng đến việc xây dựng mô hình
+học máy có khả năng phát hiện lỗ hổng trong mã nguồn phần mềm thông qua quá trình huấn luyện phân
+tán tại nhiều máy khách, đồng thời ứng dụng Blockchain để ghi nhận và hỗ trợ kiểm chứng các hoạt
+động quan trọng trong quá trình huấn luyện.
+
+Thông qua sự kết hợp này, đề tài hướng đến việc hạn chế nhu cầu tập trung mã nguồn từ nhiều bên về
+một máy chủ duy nhất, đồng thời tăng cường khả năng truy xuất nguồn gốc, tính toàn vẹn và tính minh
+bạch của lịch sử huấn luyện. Từ đó, hệ thống có thể cung cấp cơ sở để theo dõi sự tham gia của các
+máy khách và kiểm tra tính nhất quán của các thông tin liên quan đến quá trình cập nhật mô hình.
 
 \subsection{Mục tiêu cụ thể}
 
 Để đạt được mục tiêu tổng quát, đề tài tập trung vào các mục tiêu cụ thể sau:
 
 \begin{itemize}
-	\item \textbf{Nghiên cứu cơ sở lý thuyết:} Tìm hiểu kiến trúc, nguyên lý hoạt động và các thuật toán huấn luyện trong Federated Learning; nghiên cứu các vấn đề liên quan đến bảo mật, tính minh bạch và khả năng truy vết trong môi trường học máy phân tán.
-	\item \textbf{Nghiên cứu công nghệ Blockchain:} Tìm hiểu các đặc tính của Blockchain, cơ chế lưu trữ dữ liệu, hàm băm mật mã, cơ chế đồng thuận và hợp đồng thông minh (Smart Contract), từ đó xác định cách thức ứng dụng Blockchain để ghi nhận và xác minh các sự kiện trong quá trình huấn luyện FL.
-	\item \textbf{Thiết kế kiến trúc tích hợp:} Xây dựng kiến trúc hệ thống kết hợp giữa Federated Learning và Blockchain, trong đó các hoạt động quan trọng của quá trình huấn luyện được ghi nhận thông qua một cơ chế lưu trữ và kiểm chứng phù hợp.
-	\item \textbf{Xây dựng cơ chế truy vết:} Thiết kế cơ chế ghi nhận thông tin định danh client, thời điểm tham gia, vòng huấn luyện, mã băm của bản cập nhật mô hình và các thông tin cần thiết khác nhằm hỗ trợ truy xuất lịch sử đóng góp của từng client.
-	\item \textbf{Triển khai hệ thống thực nghiệm:} Xây dựng hệ thống Federated Learning sử dụng bài toán phát hiện lỗ hổng mã nguồn làm trường hợp ứng dụng, kết hợp với cơ chế ghi nhận và xác minh lịch sử huấn luyện dựa trên Blockchain.
-	\item \textbf{Đánh giá giải pháp:} Thực hiện các thí nghiệm nhằm đánh giá khả năng truy vết, tính toàn vẹn của các bản ghi, khả năng xác minh lịch sử huấn luyện và chi phí phát sinh khi tích hợp Blockchain vào hệ thống Federated Learning.
-\end{itemize}
 
-\subsection{Câu hỏi nghiên cứu}
+	\item \textbf{ Nghiên cứu cơ sở lý thuyết và các công trình liên quan: } Tìm hiểu bài toán \ac{PHLHPM}, các phương pháp ứng dụng học máy và học sâu trong phân tích mã nguồn, cơ chế huấn luyện của \ac{FL}, cũng như nguyên lý và khả năng ứng dụng Blockchain trong việc ghi nhận và kiểm chứng dữ liệu.
 
-Dựa trên vấn đề nghiên cứu và các mục tiêu đã xác định, đề tài tập trung giải quyết những câu hỏi nghiên cứu sau:
+	\item \textbf{ Xây dựng mô hình \ac{PHLHPM}: } Nghiên cứu và lựa chọn bộ dữ liệu, phương pháp biểu diễn mã nguồn và mô hình học máy hoặc học sâu phù hợp với bài toán \ac{PHLHPM}. Đánh giá khả năng phát hiện của mô hình thông qua các chỉ số thực nghiệm phù hợp.
 
-\begin{itemize}
-	\item \textbf{RQ1:} Làm thế nào để tích hợp Blockchain vào Federated Learning nhằm ghi nhận và truy xuất lịch sử hoạt động của các client trong quá trình huấn luyện phân tán? Câu hỏi này tập trung vào việc thiết kế kiến trúc tích hợp, xác định các sự kiện cần ghi nhận và xây dựng cơ chế liên kết thông tin giữa các client, các vòng huấn luyện và các phiên bản mô hình.
-	\item \textbf{RQ2:} Blockchain có thể hỗ trợ đảm bảo tính toàn vẹn và khả năng kiểm chứng của các bản ghi liên quan đến quá trình huấn luyện Federated Learning như thế nào? Câu hỏi này tập trung nghiên cứu việc sử dụng hàm băm mật mã, cấu trúc lưu trữ Blockchain và các cơ chế xác minh nhằm phát hiện những thay đổi trái phép đối với các thông tin đã được ghi nhận.
-	\item \textbf{RQ3:} Việc tích hợp Blockchain ảnh hưởng như thế nào đến hiệu năng và chi phí vận hành của hệ thống Federated Learning? Câu hỏi này hướng đến đánh giá các chi phí phát sinh do việc ghi nhận và xác minh thông tin trên Blockchain, bao gồm độ trễ, chi phí lưu trữ và ảnh hưởng đến thời gian thực hiện các vòng huấn luyện.
-\end{itemize}
+	\item \textbf{ Triển khai cơ chế học liên kết: } Xây dựng môi trường huấn luyện phân tán gồm máy chủ điều phối và nhiều máy khách. Mỗi máy khách thực hiện huấn luyện mô hình trên dữ liệu cục bộ, sau đó gửi các tham số hoặc cập nhật mô hình đến máy chủ để tổng hợp thành mô hình toàn cục mà không cần chia sẻ trực tiếp mã nguồn huấn luyện.
 
-\section{Đối tượng và phạm vi nghiên cứu}
+	\item \textbf{ Tích hợp Blockchain vào quá trình huấn luyện: } Thiết kế cơ chế ghi nhận các sự kiện quan trọng, bao gồm thông tin định danh máy khách, thời điểm tham gia, vòng huấn luyện, trạng thái xử lý và giá trị băm đại diện cho bản cập nhật mô hình. Cơ chế này nhằm hỗ trợ truy xuất lịch sử huấn luyện và kiểm tra tính toàn vẹn của các bản cập nhật đã được ghi nhận.
 
-\subsection{Đối tượng nghiên cứu}
+	\item \textbf{ Xây dựng hệ thống tích hợp và giao diện tương tác: } Kết hợp mô hình \ac{PHLHPM}, quy trình học liên kết và cơ chế ghi nhận trên Blockchain thành một hệ thống thống nhất. Xây dựng giao diện cho phép người dùng theo dõi quá trình huấn luyện, trạng thái tham gia của các máy khách và tra cứu thông tin lịch sử được ghi nhận.
 
-Đối tượng nghiên cứu của đề tài bao gồm:
+	\item \textbf{ Thực nghiệm và đánh giá hệ thống: } Tiến hành thực nghiệm để đánh giá hiệu quả \ac{PHLHPM} của mô hình, khả năng vận hành của quy trình học liên kết và hiệu quả của cơ chế ghi nhận trên Blockchain. Đồng thời, phân tích chi phí bổ sung do việc tích hợp Blockchain gây ra, chẳng hạn như độ trễ ghi nhận, thời gian xác minh và tài nguyên sử dụng.
 
-\begin{itemize}
-	\item \textbf{Federated Learning:} Kiến trúc huấn luyện mô hình học máy phân tán, bao gồm máy chủ điều phối (server), các client tham gia huấn luyện, cơ chế cập nhật mô hình cục bộ và thuật toán tổng hợp mô hình toàn cục.
-	\item \textbf{Blockchain:} Các cơ chế và thành phần công nghệ phục vụ việc ghi nhận, lưu trữ, xác minh và truy xuất thông tin liên quan đến quá trình huấn luyện Federated Learning.
-	\item \textbf{Cơ chế truy vết và kiểm toán:} Các phương pháp ghi nhận danh tính client, thời điểm tham gia, lịch sử đóng góp, thông tin cập nhật mô hình và khả năng xác minh tính toàn vẹn của những thông tin này.
-	\item \textbf{Bài toán Software Vulnerability Detection:} Các phương pháp học máy và học sâu được sử dụng để phát hiện lỗ hổng trong mã nguồn, đóng vai trò là bài toán ứng dụng để triển khai và đánh giá hệ thống Federated Learning.
-\end{itemize}
-
-\subsection{Phạm vi nghiên cứu}
-
-Trong khuôn khổ khóa luận, đề tài giới hạn phạm vi nghiên cứu như sau:
-
-\begin{itemize}
-	\item \textbf{Về Federated Learning:} Tập trung nghiên cứu mô hình Federated Learning theo kiến trúc tập trung với một máy chủ điều phối và nhiều client. Thuật toán Federated Averaging (FedAvg) được sử dụng làm phương pháp tổng hợp mô hình cơ sở.
-	\item \textbf{Về Blockchain:} Tập trung nghiên cứu và triển khai Blockchain như một lớp hỗ trợ ghi nhận và kiểm chứng lịch sử huấn luyện. Các thông tin được lưu trữ bao gồm định danh client, vòng huấn luyện, dấu thời gian, mã băm của bản cập nhật mô hình và các trạng thái xử lý liên quan.
-	\item \textbf{Về truy vết:} Tập trung vào khả năng xác định client tham gia, truy xuất lịch sử gửi cập nhật mô hình, đối chiếu các bản cập nhật với thông tin được ghi nhận và xác minh tính toàn vẹn của dữ liệu thông qua mã băm.
-	\item \textbf{Về bài toán ứng dụng:} Sử dụng bài toán phát hiện lỗ hổng mã nguồn để xây dựng và huấn luyện mô hình trong môi trường Federated Learning. Đề tài tập trung vào việc đánh giá khả năng hoạt động của hệ thống tích hợp, không đặt mục tiêu xây dựng một mô hình phát hiện lỗ hổng vượt trội so với các phương pháp tiên tiến hiện có.
-	\item \textbf{Về thực nghiệm:} Hệ thống được triển khai trong môi trường thực nghiệm có kiểm soát với số lượng client và các kịch bản huấn luyện được xác định trước. Việc đánh giá tập trung vào khả năng truy vết, tính toàn vẹn của dữ liệu ghi nhận và chi phí vận hành phát sinh.
-\end{itemize}
-
-Đề tài không hướng đến xây dựng một nền tảng Blockchain công khai quy mô lớn, giải quyết toàn bộ các vấn đề bảo mật của Federated Learning hoặc đảm bảo rằng mọi bản cập nhật mô hình được ghi nhận đều có chất lượng và độ an toàn. Blockchain được sử dụng chủ yếu để cung cấp bằng chứng về lịch sử hoạt động và hỗ trợ xác minh tính toàn vẹn của các thông tin đã được ghi nhận.
-
-\section{Phương pháp nghiên cứu}
-
-Để thực hiện các mục tiêu nghiên cứu, đề tài kết hợp phương pháp nghiên cứu lý thuyết, thiết kế hệ thống, thực nghiệm và đánh giá định lượng.
-
-\subsection{Phương pháp nghiên cứu tài liệu}
-
-Tiến hành thu thập, phân tích và tổng hợp các tài liệu khoa học liên quan đến Federated Learning, Blockchain, bảo mật trong học máy phân tán và các phương pháp phát hiện lỗ hổng mã nguồn. Các nguồn tài liệu bao gồm bài báo khoa học, công trình nghiên cứu đã công bố, tài liệu kỹ thuật và các tài liệu chính thức của những công nghệ được sử dụng. Trên cơ sở đó, đề tài xác định các vấn đề còn tồn tại, đánh giá những phương pháp tiếp cận hiện có và lựa chọn hướng giải quyết phù hợp.
-
-\subsection{Phương pháp thiết kế và xây dựng hệ thống}
-
-Dựa trên kết quả nghiên cứu lý thuyết, đề tài tiến hành thiết kế kiến trúc hệ thống tích hợp Federated Learning và Blockchain. Quá trình thiết kế bao gồm:
-
-\begin{itemize}
-	\item Xây dựng môi trường Federated Learning với server và nhiều client.
-	\item Thiết kế quy trình trao đổi và tổng hợp các bản cập nhật mô hình.
-	\item Xác định các sự kiện cần ghi nhận trong quá trình huấn luyện.
-	\item Thiết kế cấu trúc dữ liệu lưu trữ và cơ chế tạo mã băm cho các bản cập nhật mô hình.
-	\item Xây dựng cơ chế ghi nhận và xác minh thông tin trên Blockchain.
-	\item Xây dựng thành phần giao diện hỗ trợ theo dõi và truy xuất lịch sử huấn luyện.
-\end{itemize}
-
-\subsection{Phương pháp thực nghiệm}
-
-Tiến hành xây dựng môi trường thực nghiệm để kiểm tra khả năng hoạt động của hệ thống đề xuất. Các thí nghiệm được thực hiện trên bài toán phát hiện lỗ hổng mã nguồn trong môi trường Federated Learning. Dữ liệu được phân chia cho các client nhằm mô phỏng môi trường huấn luyện phân tán. Các client thực hiện huấn luyện cục bộ và gửi bản cập nhật mô hình đến server để tổng hợp.
-
-Trong quá trình này, các sự kiện liên quan đến hoạt động huấn luyện được ghi nhận trên Blockchain. Sau đó, tiến hành các kịch bản kiểm tra và đối chiếu nhằm đánh giá khả năng truy xuất lịch sử, xác minh tính toàn vẹn và phát hiện những thay đổi trái phép đối với các thông tin đã được ghi nhận.
-
-\subsection{Phương pháp đánh giá và phân tích kết quả}
-
-Kết quả thực nghiệm được đánh giá thông qua các chỉ số định lượng và phân tích định tính. Các nhóm chỉ số dự kiến bao gồm:
-
-\begin{itemize}
-	\item \textbf{Hiệu quả mô hình:} Accuracy, Precision, Recall, F1-score và AUC-ROC nhằm đánh giá khả năng phát hiện lỗ hổng mã nguồn.
-	\item \textbf{Khả năng truy vết:} Tỷ lệ truy xuất thành công các sự kiện, mức độ đầy đủ của lịch sử huấn luyện và khả năng xác định nguồn gốc các bản cập nhật mô hình.
-	\item \textbf{Tính toàn vẹn:} Khả năng phát hiện sự thay đổi đối với các dữ liệu được ghi nhận thông qua việc đối chiếu mã băm.
-	\item \textbf{Hiệu năng hệ thống:} Độ trễ ghi nhận và xác minh giao dịch, chi phí lưu trữ và thời gian thực hiện các vòng huấn luyện.
-\end{itemize}
-
-Các kết quả thu được được so sánh giữa hệ thống Federated Learning truyền thống và hệ thống Federated Learning có tích hợp Blockchain nhằm xác định những lợi ích và chi phí phát sinh từ giải pháp đề xuất.
-
-\section{Nội dung thực hiện}
-
-Để đạt được các mục tiêu nghiên cứu đã đề ra, đề tài tập trung thực hiện các nội dung chính sau:
-
-\begin{enumerate}
-	\item \textbf{Nghiên cứu cơ sở lý thuyết và các công trình liên quan:} Tìm hiểu nguyên lý hoạt động, kiến trúc và các thuật toán của Federated Learning; nghiên cứu các vấn đề về bảo mật, tính minh bạch và khả năng truy vết trong môi trường học máy phân tán. Đồng thời, tìm hiểu công nghệ Blockchain, các cơ chế lưu trữ và xác minh dữ liệu, cũng như những nghiên cứu đã ứng dụng Blockchain trong Federated Learning.
-	\item \textbf{Nghiên cứu bài toán phát hiện lỗ hổng mã nguồn và lựa chọn dữ liệu thực nghiệm:} Tìm hiểu các phương pháp phát hiện lỗ hổng mã nguồn dựa trên học máy và học sâu. Khảo sát, lựa chọn dataset phù hợp, tiến hành phân tích, tiền xử lý và phân chia dữ liệu cho các client nhằm phục vụ quá trình huấn luyện phân tán.
-	\item \textbf{Thiết kế kiến trúc hệ thống Federated Learning tích hợp Blockchain:} Xây dựng kiến trúc tổng thể gồm máy chủ điều phối, các client tham gia huấn luyện và thành phần Blockchain phục vụ ghi nhận, xác minh thông tin. Xác định luồng trao đổi dữ liệu, quy trình cập nhật mô hình và các sự kiện cần được lưu trữ để đảm bảo khả năng truy vết.
-	\item \textbf{Xây dựng cơ chế ghi nhận và truy vết quá trình huấn luyện:} Thiết kế và triển khai cơ chế ghi nhận các thông tin quan trọng như định danh client, thời điểm tham gia, số thứ tự vòng huấn luyện, mã băm của bản cập nhật mô hình và trạng thái xử lý. Xây dựng cơ chế truy xuất lịch sử và xác minh tính toàn vẹn của các thông tin được lưu trữ trên Blockchain.
-	\item \textbf{Triển khai hệ thống và xây dựng giao diện tương tác:} Hiện thực hóa kiến trúc đã thiết kế, tích hợp quá trình huấn luyện Federated Learning với cơ chế ghi nhận trên Blockchain. Xây dựng giao diện web nhằm hỗ trợ theo dõi trạng thái huấn luyện, quan sát hoạt động của các client và truy xuất lịch sử các sự kiện liên quan.
-	\item \textbf{Tiến hành thực nghiệm và đánh giá hệ thống:} Xây dựng các kịch bản thực nghiệm để đánh giá khả năng hoạt động của hệ thống. Thực hiện so sánh giữa Federated Learning truyền thống và Federated Learning tích hợp Blockchain về khả năng truy vết, tính toàn vẹn của thông tin và chi phí vận hành. Đồng thời, đánh giá hiệu quả của mô hình phát hiện lỗ hổng mã nguồn trong môi trường huấn luyện phân tán.
-	\item \textbf{Tổng hợp kết quả và hoàn thiện khóa luận:} Phân tích kết quả thực nghiệm, đánh giá những ưu điểm và hạn chế của giải pháp, từ đó đề xuất các hướng cải tiến và phát triển trong tương lai.
-\end{enumerate}
-
-\section{Cấu trúc khóa luận}
-
-Ngoài phần mở đầu, kết luận và tài liệu tham khảo, nội dung chính của khóa luận được tổ chức thành sáu chương như sau:
-
-\begin{itemize}
-	\item \textbf{Chương 1: Giới thiệu đề tài.} Trình bày bối cảnh nghiên cứu, lý do lựa chọn đề tài, mục tiêu nghiên cứu, đối tượng và phạm vi nghiên cứu, phương pháp nghiên cứu, các nội dung thực hiện và cấu trúc tổng thể của khóa luận.
-	\item \textbf{Chương 2: Cơ sở lý thuyết và các nghiên cứu liên quan.} Trình bày các kiến thức nền tảng về Federated Learning, Blockchain và bài toán phát hiện lỗ hổng mã nguồn. Đồng thời, phân tích các nghiên cứu liên quan đến việc ứng dụng Blockchain trong Federated Learning, các vấn đề về bảo mật và khả năng truy vết, từ đó xác định khoảng trống nghiên cứu mà đề tài hướng đến giải quyết.
-	\item \textbf{Chương 3: Phương pháp đề xuất và thiết kế hệ thống.} Trình bày bài toán nghiên cứu, ý tưởng và phương pháp tiếp cận được đề xuất. Chương này tập trung mô tả kiến trúc hệ thống tích hợp Federated Learning và Blockchain, quy trình huấn luyện, cơ chế ghi nhận sự kiện, phương pháp xác minh tính toàn vẹn và quy trình truy xuất lịch sử hoạt động của các client.
-	\item \textbf{Chương 4: Xây dựng và triển khai hệ thống.} Trình bày môi trường triển khai, công nghệ sử dụng, dataset, quy trình tiền xử lý dữ liệu, mô hình phát hiện lỗ hổng mã nguồn và quá trình hiện thực hóa các thành phần của hệ thống. Đồng thời, mô tả việc tích hợp Federated Learning với Blockchain và xây dựng giao diện web phục vụ giám sát, truy xuất thông tin.
-	\item \textbf{Chương 5: Thực nghiệm và đánh giá.} Trình bày thiết lập môi trường, các kịch bản thực nghiệm và những chỉ số đánh giá được sử dụng. Phân tích kết quả về hiệu quả phát hiện lỗ hổng, khả năng truy vết, tính toàn vẹn của thông tin và hiệu năng hệ thống khi tích hợp Blockchain vào Federated Learning.
-	\item \textbf{Chương 6: Kết luận và hướng phát triển.} Tổng kết các kết quả đạt được so với mục tiêu nghiên cứu ban đầu, đánh giá những hạn chế còn tồn tại và đề xuất các hướng phát triển nhằm cải thiện khả năng truy vết, tính bảo mật và hiệu quả vận hành của hệ thống trong tương lai.
 \end{itemize}

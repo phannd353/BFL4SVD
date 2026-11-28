@@ -1,10 +1,666 @@
 \chapter{CƠ SỞ LÝ THUYẾT VÀ CÁC NGHIÊN CỨU LIÊN QUAN}
-% \label{related_works}
 
-\section{Nội dung Tiêu đề 1}
-\subsection{Nội dung Tiêu đề 1.1}
-\subsection{Nội dung Tiêu đề 1.2}
+\section{Phát hiện lỗ hổng phần mềm}
 
-\section{Nội dung Tiêu đề 2}
-\subsection{Nội dung Tiêu đề 2.1}
-\subsection{Nội dung Tiêu đề 2.2}
+\subsection{Khái niệm lỗ hổng phần mềm}
+
+Lỗ hổng phần mềm là những điểm yếu hoặc sai sót trong mã nguồn, thiết kế hay quá trình triển khai
+phần mềm có thể bị khai thác để làm ảnh hưởng đến tính bảo mật, tính toàn vẹn hoặc tính sẵn sàng
+của hệ thống. Các lỗ hổng có thể xuất hiện do lỗi lập trình, xử lý dữ liệu không an toàn, quản lý
+bộ nhớ không đúng cách hoặc thiếu các cơ chế kiểm soát truy cập cần thiết. Khi bị khai thác, chúng
+có thể dẫn đến nhiều hậu quả như rò rỉ thông tin, thực thi mã trái phép, leo thang đặc quyền hoặc
+làm gián đoạn hoạt động của hệ thống.
+
+Trong lĩnh vực an toàn phần mềm, phát hiện lỗ hổng phần mềm (Software Vulnerability Detection --
+SVD) là quá trình xác định các đoạn mã hoặc thành phần phần mềm có khả năng chứa lỗ hổng bảo mật.
+Mục tiêu của quá trình này là hỗ trợ lập trình viên và chuyên gia bảo mật phát hiện sớm các điểm
+yếu trước khi phần mềm được triển khai hoặc đưa vào vận hành. Phát hiện lỗ hổng phần mềm có thể
+được thực hiện ở nhiều mức độ khác nhau, từ phân tích một dòng lệnh, một đoạn mã, một hàm cho đến
+toàn bộ chương trình.
+
+\subsection{Các phương pháp phát hiện lỗ hổng phần mềm}
+
+Các phương pháp phát hiện lỗ hổng phần mềm truyền thống thường bao gồm phân tích tĩnh, phân tích
+động và kiểm thử dựa trên các trường hợp đầu vào. Phân tích tĩnh kiểm tra mã nguồn hoặc biểu diễn
+trung gian của chương trình mà không cần thực thi chương trình. Phương pháp này có thể sử dụng các
+quy tắc, mẫu lỗi hoặc phân tích luồng dữ liệu để xác định những hành vi có khả năng không an toàn.
+Tuy nhiên, các công cụ phân tích tĩnh dựa trên quy tắc thường phụ thuộc vào tập quy tắc được xây
+dựng trước và có thể gặp khó khăn khi phát hiện những lỗ hổng phức tạp liên quan đến ngữ nghĩa
+chương trình.
+
+Phân tích động thực hiện chương trình trong một môi trường kiểm soát và quan sát hành vi của chương
+trình khi xử lý các đầu vào khác nhau. Phương pháp này có khả năng phát hiện lỗi thông qua hành vi
+thực tế, nhưng hiệu quả phụ thuộc vào khả năng tạo ra các đầu vào phù hợp và mức độ bao phủ của quá
+trình kiểm thử. Trong khi đó, kiểm thử fuzzing tạo ra hoặc biến đổi nhiều đầu vào nhằm kích thích
+các trạng thái thực thi khác nhau của chương trình, từ đó tìm kiếm những hành vi bất thường như
+crash hoặc vi phạm bộ nhớ.
+
+Những phương pháp trên có vai trò quan trọng trong quy trình bảo đảm an toàn phần mềm, nhưng vẫn
+tồn tại hạn chế trong việc phát hiện các lỗ hổng phụ thuộc vào ngữ cảnh và quan hệ phức tạp giữa
+các thành phần mã nguồn. Sự phát triển của học máy và học sâu đã mở ra hướng tiếp cận mới, trong đó
+mô hình có thể học các đặc trưng từ dữ liệu mã nguồn đã được gán nhãn để dự đoán khả năng một đoạn
+mã chứa lỗ hổng.
+
+\subsection{Phát hiện lỗ hổng phần mềm dựa trên học sâu}
+
+Học sâu (Deep Learning -- DL) là một nhánh của học máy sử dụng các mạng nơ-ron nhiều lớp để học
+biểu diễn dữ liệu và trích xuất đặc trưng ở nhiều mức độ trừu tượng. Trong bài toán phát hiện lỗ
+hổng phần mềm, các mô hình học sâu có thể được huấn luyện trên tập dữ liệu mã nguồn đã được gán
+nhãn, trong đó mỗi mẫu được xác định là có hoặc không có lỗ hổng.
+
+Một hướng tiếp cận phổ biến là biểu diễn mã nguồn dưới dạng chuỗi token hoặc chuỗi từ, sau đó sử
+dụng các mô hình xử lý ngôn ngữ để học đặc trưng tuần tự. Tuy nhiên, mã nguồn không chỉ chứa thông
+tin về thứ tự các token mà còn thể hiện cấu trúc cú pháp, luồng điều khiển và quan hệ phụ thuộc dữ
+liệu. Những quan hệ này có thể đóng vai trò quan trọng trong việc xác định nguyên nhân gây ra lỗ
+hổng.
+
+Do đó, việc biểu diễn mã nguồn dưới dạng đồ thị và áp dụng học sâu trên đồ thị (Graph Deep
+Learning) là một hướng tiếp cận phù hợp với bài toán này. Trong biểu diễn đồ thị chương trình, các
+nút có thể đại diện cho token, biểu thức hoặc thành phần cú pháp, trong khi các cạnh thể hiện quan
+hệ giữa chúng. Mô hình có thể khai thác cấu trúc đồ thị để học các đặc trưng ngữ nghĩa của chương
+trình, hỗ trợ nhận diện những mẫu mã có khả năng chứa lỗ hổng.
+
+\subsection{Bài toán phát hiện lỗ hổng phần mềm}
+
+Trong phạm vi nghiên cứu này, phát hiện lỗ hổng phần mềm được mô hình hóa thành bài toán phân loại
+nhị phân ở cấp độ hàm (function-level binary classification). Với mỗi hàm mã nguồn đầu vào, hệ
+thống dự đoán hàm đó có chứa lỗ hổng bảo mật hay không.
+
+Cho tập dữ liệu:
+\[
+	\mathcal{D} = \{(x_i, y_i)\}_{i=1}^{N},
+\]
+trong đó $x_i$ là biểu diễn của hàm mã nguồn thứ $i$, $y_i \in \{0,1\}$ là nhãn tương ứng, với $y_i
+	= 1$ biểu thị hàm có lỗ hổng và $y_i = 0$ biểu thị hàm không có lỗ hổng. Mô hình phát hiện lỗ hổng
+được xây dựng như một hàm dự đoán:
+\[
+	f_{\theta}: x_i \rightarrow \hat{y}_i,
+\]
+trong đó $\theta$ là tập tham số của mô hình và $\hat{y}_i$ là nhãn dự đoán của hàm mã nguồn đầu
+vào.
+
+Mục tiêu huấn luyện là tìm bộ tham số $\theta$ giúp mô hình dự đoán chính xác nhãn của các mẫu chưa
+xuất hiện trong quá trình huấn luyện. Trong thực tế, tập dữ liệu phát hiện lỗ hổng có thể mất cân
+bằng giữa số lượng mẫu có lỗ hổng và không có lỗ hổng. Vì vậy, việc đánh giá mô hình không nên chỉ
+dựa trên độ chính xác (Accuracy), mà cần xem xét thêm các chỉ số như Precision, Recall và F1-score
+nhằm phản ánh đầy đủ hơn khả năng phát hiện lỗ hổng.
+
+\subsection{Thách thức trong phát hiện lỗ hổng phần mềm}
+
+Một trong những thách thức của phát hiện lỗ hổng phần mềm là tính phức tạp của ngữ nghĩa mã nguồn.
+Hai đoạn mã có cấu trúc cú pháp tương tự có thể có mức độ an toàn khác nhau do sự khác biệt trong
+luồng điều khiển, luồng dữ liệu hoặc cách sử dụng các biến và hàm. Ngược lại, cùng một loại lỗ hổng
+có thể được biểu diễn bằng nhiều cách viết mã khác nhau, khiến việc phát hiện dựa trên các mẫu cú
+pháp cố định trở nên khó khăn.
+
+Bên cạnh đó, dữ liệu mã nguồn phục vụ huấn luyện thường được thu thập từ nhiều dự án hoặc tổ chức
+khác nhau. Việc tập trung toàn bộ dữ liệu về một máy chủ có thể gây ra những lo ngại về quyền riêng
+tư, bảo mật và quyền sở hữu trí tuệ. Trong một số trường hợp, các tổ chức không thể chia sẻ trực
+tiếp mã nguồn do những ràng buộc về chính sách hoặc pháp lý.
+
+Ngoài vấn đề dữ liệu phân tán, quá trình huấn luyện mô hình học sâu còn cần được kiểm soát về nguồn
+gốc và tính toàn vẹn. Khi nhiều bên cùng tham gia huấn luyện, cần có khả năng xác định mô hình được
+tạo ra từ những lần huấn luyện nào, bởi client nào và dựa trên phiên bản mô hình trước đó nào. Nếu
+thiếu cơ chế ghi nhận và kiểm tra lịch sử, việc truy xuất nguồn gốc mô hình và kiểm toán quá trình
+huấn luyện sẽ gặp nhiều khó khăn.
+
+Từ những thách thức trên, nghiên cứu này sử dụng mô hình phát hiện lỗ hổng phần mềm dựa trên đồ thị
+làm nền tảng, kết hợp học liên kết nhằm hỗ trợ huấn luyện trên dữ liệu mã nguồn phân tán mà không
+cần tập trung dữ liệu gốc. Đồng thời, chuỗi khối được sử dụng để ghi nhận thông tin liên quan đến
+quá trình huấn luyện và lịch sử mô hình, qua đó tăng cường khả năng truy xuất nguồn gốc và kiểm
+toán trong hệ thống.
+
+\section{Học sâu trên đồ thị}
+
+\subsection{Khái niệm đồ thị}
+
+Đồ thị là một cấu trúc dữ liệu được sử dụng để biểu diễn các đối tượng và mối quan hệ giữa chúng. Một đồ thị có thể được định nghĩa dưới dạng:
+\[
+	G = (V, E),
+\]
+trong đó $V$ là tập hợp các nút (nodes) và $E$ là tập hợp các cạnh (edges) biểu diễn mối quan hệ
+giữa các nút. Đồ thị có thể là đồ thị có hướng hoặc vô hướng, có trọng số hoặc không có trọng số,
+tùy thuộc vào đặc điểm của bài toán cần mô hình hóa.
+
+Khác với dữ liệu dạng bảng hoặc dữ liệu tuần tự, dữ liệu đồ thị có cấu trúc quan hệ không cố định
+và số lượng nút, cạnh có thể khác nhau giữa các mẫu dữ liệu. Đặc điểm này khiến việc áp dụng trực
+tiếp các mô hình học sâu truyền thống trở nên khó khăn, đồng thời tạo ra nhu cầu về những kiến trúc
+có khả năng xử lý và học biểu diễn trên dữ liệu có cấu trúc đồ thị.
+
+Trong lĩnh vực phân tích mã nguồn, đồ thị được sử dụng để biểu diễn các thành phần của chương trình
+và quan hệ giữa chúng. Các nút có thể đại diện cho các câu lệnh, biểu thức, biến hoặc thành phần cú
+pháp, trong khi các cạnh thể hiện quan hệ cú pháp, luồng điều khiển hoặc phụ thuộc dữ liệu. Nhờ đó,
+đồ thị chương trình có thể cung cấp thông tin cấu trúc và ngữ nghĩa mà biểu diễn mã nguồn dưới dạng
+chuỗi token khó thể hiện đầy đủ.
+
+\subsection{Học sâu trên đồ thị}
+
+Học sâu trên đồ thị (Graph Deep Learning) là hướng nghiên cứu sử dụng các mô hình học sâu để xử lý
+dữ liệu có cấu trúc đồ thị. Trong đó, mạng nơ-ron đồ thị (Graph Neural Network -- GNN) là một nhóm
+mô hình quan trọng, cho phép học biểu diễn của các nút, cạnh hoặc toàn bộ đồ thị thông qua quá
+trình lan truyền và tổng hợp thông tin giữa các nút có liên kết.
+
+Ý tưởng cơ bản của GNN là biểu diễn mỗi nút bằng một vector đặc trưng và cập nhật vector này dựa trên đặc trưng của các nút lân cận. Qua nhiều bước cập nhật, một nút có thể tiếp nhận thông tin từ các nút ở khoảng cách xa hơn trong đồ thị. Quá trình này thường được gọi là truyền thông điệp (message passing).
+
+Tại bước cập nhật thứ $k$, biểu diễn của nút $v$ có thể được mô tả tổng quát như sau:
+\[
+	m_v^{(k)} =
+	\operatorname{AGGREGATE}^{(k)}
+	\left(
+	\left\{
+	h_u^{(k-1)} \mid u \in \mathcal{N}(v)
+	\right\}
+	\right),
+\]
+\[
+	h_v^{(k)} =
+	\operatorname{UPDATE}^{(k)}
+	\left(
+	h_v^{(k-1)}, m_v^{(k)}
+	\right),
+\]
+trong đó $h_v^{(k)}$ là vector biểu diễn của nút $v$ tại bước $k$, $\mathcal{N}(v)$ là tập các nút
+lân cận của $v$, $m_v^{(k)}$ là thông tin được tổng hợp từ các nút lân cận, còn
+$\operatorname{AGGREGATE}$ và $\operatorname{UPDATE}$ là các hàm tổng hợp và cập nhật biểu diễn.
+
+Sau nhiều bước truyền thông điệp, biểu diễn của mỗi nút chứa thông tin từ vùng lân cận rộng hơn
+trong đồ thị. Đối với các bài toán phân loại toàn đồ thị, các biểu diễn nút được tổng hợp thành một
+vector đại diện cho toàn bộ đồ thị. Vector này sau đó được đưa vào các lớp phân loại để dự đoán
+nhãn của đồ thị.
+
+\subsection{Biểu diễn mã nguồn dưới dạng đồ thị}
+
+Mã nguồn là dữ liệu có cấu trúc, trong đó ý nghĩa của một câu lệnh không chỉ phụ thuộc vào nội dung
+văn bản mà còn phụ thuộc vào vị trí và quan hệ của nó với các thành phần khác trong chương trình.
+Vì vậy, việc chuyển đổi mã nguồn thành đồ thị giúp mô hình học sâu khai thác được nhiều loại thông
+tin khác nhau.
+
+Một số dạng biểu diễn đồ thị thường được sử dụng trong phân tích mã nguồn bao gồm:
+
+\begin{itemize}
+	\item \textbf{Abstract Syntax Tree (AST):} Biểu diễn cấu trúc cú pháp trừu tượng của chương trình. Các nút thể hiện những thành phần cú pháp như khai báo, biểu thức, câu lệnh và các cạnh thể hiện quan hệ phân cấp giữa chúng.
+	\item \textbf{Control Flow Graph (CFG):} Biểu diễn các luồng điều khiển có thể xảy ra trong chương trình. Các nút thường đại diện cho khối lệnh hoặc câu lệnh, còn các cạnh thể hiện khả năng chuyển tiếp trong quá trình thực thi.
+	\item \textbf{Data Flow Graph (DFG):} Biểu diễn quan hệ phụ thuộc dữ liệu giữa các thành phần chương trình, chẳng hạn như quan hệ giữa nơi một biến được định nghĩa và nơi biến đó được sử dụng.
+\end{itemize}
+
+Mỗi dạng đồ thị cung cấp một góc nhìn khác nhau về chương trình. AST tập trung vào cấu trúc cú
+pháp, CFG thể hiện quan hệ điều khiển và DFG mô tả sự phụ thuộc dữ liệu. Việc kết hợp các biểu diễn
+này giúp mô hình khai thác đồng thời nhiều khía cạnh của ngữ nghĩa chương trình, từ đó hỗ trợ phát
+hiện các lỗ hổng không thể nhận diện chỉ dựa trên đặc điểm cú pháp.
+
+\subsection{Mô hình Devign}
+
+Devign là mô hình phát hiện lỗ hổng phần mềm dựa trên mạng nơ-ron đồ thị, được đề xuất bởi Zhou và
+cộng sự tại NeurIPS năm 2019. Mô hình hướng đến bài toán phân loại ở cấp độ hàm mã nguồn, bằng cách
+học các đặc trưng ngữ nghĩa từ biểu diễn đồ thị chương trình và dự đoán hàm đầu vào có chứa lỗ hổng
+hay không.
+
+Devign kết hợp nhiều dạng biểu diễn ngữ nghĩa mã nguồn thành một đồ thị tổng hợp. Cụ thể, mô hình
+sử dụng cấu trúc dựa trên AST, kết hợp các quan hệ luồng điều khiển, phụ thuộc dữ liệu và thông tin
+về thứ tự tự nhiên của mã nguồn. Việc bổ sung các loại cạnh khác nhau giúp biểu diễn đồ thị chứa
+nhiều thông tin hơn so với chỉ sử dụng cấu trúc cú pháp.
+
+Đầu vào của Devign là đồ thị mã nguồn có các nút được biểu diễn bằng vector đặc trưng. Trong mô hình gốc, đặc trưng nút được xây dựng từ biểu diễn nội dung mã nguồn và loại nút. Nội dung mã nguồn được mã hóa bằng Word2Vec, trong khi loại nút được biểu diễn bằng phương pháp mã hóa nhãn. Các vector này được kết hợp để tạo thành biểu diễn ban đầu của từng nút trong đồ thị.
+
+Kiến trúc Devign gồm ba thành phần chính:
+
+\begin{enumerate}
+	\item \textbf{Graph Embedding Layer:} Chuyển đổi hàm mã nguồn thành đồ thị có cấu trúc và đặc trưng nút phù hợp cho mô hình học sâu.
+	\item \textbf{Gated Graph Recurrent Layer:} Sử dụng mạng nơ-ron đồ thị có cơ chế cổng để truyền và tổng hợp thông tin giữa các nút. Trạng thái của mỗi nút được cập nhật qua nhiều bước lan truyền, cho phép mô hình học các quan hệ cấu trúc và ngữ nghĩa trong đồ thị.
+	\item \textbf{Convolutional Layer:} Tổng hợp các biểu diễn nút đã được học để trích xuất những đặc trưng có ích cho việc phân loại toàn đồ thị. Đặc trưng sau đó được đưa qua các lớp kết nối đầy đủ để tạo ra kết quả dự đoán.
+\end{enumerate}
+
+Mô hình có thể được biểu diễn tổng quát bằng hàm:
+\[
+	f_{\theta}: G_i \rightarrow \hat{y}_i,
+\]
+trong đó $G_i$ là đồ thị biểu diễn hàm mã nguồn thứ $i$, $\theta$ là tập tham số của mô hình và
+$\hat{y}_i$ là nhãn dự đoán. Với bài toán phân loại nhị phân, đầu ra tương ứng với hai lớp: hàm có
+lỗ hổng và hàm không có lỗ hổng.
+
+Devign được lựa chọn trong nghiên cứu này làm kiến trúc nền tảng cho bài toán phát hiện lỗ hổng
+phần mềm. Khả năng biểu diễn mã nguồn dưới dạng đồ thị tổng hợp giúp mô hình khai thác thông tin cú
+pháp, luồng điều khiển và phụ thuộc dữ liệu. Đồng thời, việc thực hiện phân loại ở cấp độ hàm phù
+hợp với mục tiêu xây dựng hệ thống phát hiện lỗ hổng từ các mẫu mã nguồn được phân phối tại nhiều
+client trong môi trường học liên kết.
+
+\section{Học liên kết}
+
+\subsection{Khái niệm học liên kết}
+
+Học liên kết (Federated Learning -- FL) là một phương pháp học máy phân tán cho phép nhiều bên cùng
+tham gia huấn luyện một mô hình chung mà không cần tập trung dữ liệu huấn luyện về một máy chủ.
+Thay vì truyền dữ liệu gốc đến máy chủ, các client thực hiện quá trình huấn luyện trên dữ liệu cục
+bộ và gửi các cập nhật mô hình đến máy chủ điều phối. Máy chủ tổng hợp các cập nhật này để tạo ra
+mô hình toàn cục, sau đó phân phối mô hình mới cho các client trong những vòng huấn luyện tiếp
+theo.
+
+Học liên kết được đề xuất nhằm giải quyết những vấn đề liên quan đến dữ liệu phân tán, quyền riêng
+tư và chi phí truyền tải dữ liệu. Phương pháp này đặc biệt phù hợp với những lĩnh vực mà dữ liệu
+được lưu trữ tại nhiều tổ chức hoặc thiết bị khác nhau và không thể dễ dàng chia sẻ trực tiếp.
+Trong bài toán phát hiện lỗ hổng phần mềm, mã nguồn có thể thuộc quyền sở hữu của các tổ chức khác
+nhau và chứa thông tin nhạy cảm. Do đó, học liên kết cho phép các bên cùng huấn luyện mô hình phát
+hiện lỗ hổng mà không cần chia sẻ trực tiếp mã nguồn gốc.
+
+\subsection{Kiến trúc học liên kết}
+
+Một hệ thống học liên kết cơ bản thường bao gồm máy chủ điều phối (Federated Server) và nhiều
+client tham gia huấn luyện. Máy chủ quản lý mô hình toàn cục, lựa chọn client tham gia từng vòng
+huấn luyện, phân phối mô hình và tổng hợp các cập nhật nhận được. Mỗi client lưu trữ tập dữ liệu
+cục bộ, thực hiện huấn luyện mô hình và gửi kết quả cập nhật về máy chủ.
+
+Trong kiến trúc học liên kết tập trung, máy chủ điều phối không nhất thiết cần truy cập trực tiếp
+vào dữ liệu huấn luyện của các client. Tuy nhiên, máy chủ vẫn đóng vai trò quan trọng trong việc
+điều phối quá trình huấn luyện và có thể nắm giữ mô hình toàn cục cũng như các cập nhật được gửi từ
+client.
+
+Một vòng huấn luyện liên kết thường bao gồm các bước sau:
+
+\begin{enumerate}
+	\item Máy chủ khởi tạo hoặc nhận mô hình toàn cục hiện tại.
+	\item Máy chủ lựa chọn một tập client tham gia vòng huấn luyện và gửi mô hình toàn cục đến các client
+	      được chọn.
+	\item Mỗi client sử dụng dữ liệu cục bộ để huấn luyện mô hình trong một số epoch và tạo ra mô hình cục bộ
+	      đã cập nhật.
+	\item Các client gửi tham số hoặc cập nhật mô hình về máy chủ.
+	\item Máy chủ tổng hợp các mô hình cục bộ để tạo ra mô hình toàn cục mới.
+	\item Mô hình toàn cục mới được phân phối cho các client trong vòng huấn luyện tiếp theo.
+\end{enumerate}
+
+Quá trình trên được lặp lại qua nhiều vòng cho đến khi đạt số vòng huấn luyện xác định trước hoặc
+mô hình đạt điều kiện hội tụ.
+
+\subsection{Mô hình toán học của học liên kết}
+
+Giả sử hệ thống có $K$ client, trong đó client thứ $k$ lưu trữ tập dữ liệu cục bộ $\mathcal{D}_k$
+với số lượng mẫu là $n_k$. Tổng số mẫu của toàn hệ thống được xác định như sau:
+\[
+	N = \sum_{k=1}^{K} n_k.
+\]
+
+Mục tiêu của học liên kết là tìm bộ tham số mô hình toàn cục $\theta$ nhằm tối thiểu hóa hàm mất
+mát trên dữ liệu của tất cả các client. Bài toán tối ưu toàn cục có thể được biểu diễn như sau:
+\[
+	\min_{\theta} F(\theta)
+	= \sum_{k=1}^{K} \frac{n_k}{N} F_k(\theta),
+\]
+trong đó $F_k(\theta)$ là hàm mất mát cục bộ của client thứ $k$, được xác định trên tập dữ liệu
+$\mathcal{D}_k$.
+
+Hàm mất mát cục bộ có thể được biểu diễn dưới dạng:
+\[
+	F_k(\theta)
+	= \frac{1}{n_k}
+	\sum_{(x_i,y_i)\in\mathcal{D}_k}
+	\ell(f_{\theta}(x_i),y_i),
+\]
+trong đó $f_{\theta}$ là mô hình dự đoán với tham số $\theta$, $y_i$ là nhãn thực tế và $\ell$ là
+hàm mất mát được sử dụng trong quá trình huấn luyện.
+
+Trong bài toán phát hiện lỗ hổng phần mềm, mỗi client có thể lưu trữ một tập đồ thị mã nguồn riêng.
+Mô hình Devign được huấn luyện trên các đồ thị này nhằm dự đoán nhãn lỗ hổng của từng hàm mã nguồn.
+Hàm mất mát cục bộ được tính dựa trên sự khác biệt giữa nhãn dự đoán và nhãn thực tế của các mẫu
+tại client.
+
+\subsection{Thuật toán Federated Averaging}
+
+Federated Averaging (FedAvg) là một thuật toán tổng hợp mô hình phổ biến trong học liên kết, được
+đề xuất bởi McMahan và cộng sự. Thuật toán kết hợp quá trình huấn luyện cục bộ tại các client với
+phép trung bình có trọng số các tham số mô hình tại máy chủ.
+
+Tại vòng huấn luyện thứ $t$, máy chủ phân phối mô hình toàn cục có tham số $\theta_t$ đến các
+client được lựa chọn. Mỗi client khởi tạo mô hình cục bộ từ $\theta_t$ và thực hiện huấn luyện trên
+dữ liệu của mình để thu được tham số $\theta_{t+1}^{(k)}$.
+
+Sau khi nhận được các cập nhật từ tập client tham gia $\mathcal{S}_t$, máy chủ thực hiện tổng hợp
+theo công thức:
+\[
+	\theta_{t+1}
+	= \sum_{k\in\mathcal{S}_t}
+	\frac{n_k}{\sum_{j\in\mathcal{S}_t}n_j}
+	\theta_{t+1}^{(k)},
+\]
+trong đó $n_k$ là số lượng mẫu huấn luyện của client thứ $k$ và $\mathcal{S}_t$ là tập client tham
+gia vòng huấn luyện thứ $t$.
+
+Phép tổng hợp có trọng số giúp các client có nhiều mẫu huấn luyện đóng góp tương ứng vào mô hình
+toàn cục. Sau khi tổng hợp, máy chủ cập nhật mô hình và bắt đầu vòng huấn luyện tiếp theo. FedAvg
+có ưu điểm là dễ triển khai và giảm nhu cầu truyền dữ liệu gốc giữa các client, nhưng hiệu quả của
+thuật toán có thể bị ảnh hưởng bởi sự khác biệt về phân phối dữ liệu giữa các client.
+
+\subsection{Đặc điểm và thách thức của học liên kết}
+
+Học liên kết có một số đặc điểm quan trọng. Thứ nhất, dữ liệu huấn luyện được lưu trữ cục bộ tại
+các client, giúp giảm nhu cầu tập trung dữ liệu và hỗ trợ bảo vệ quyền riêng tư. Thứ hai, hệ thống
+có thể mở rộng bằng cách bổ sung các client mới mà không cần chuyển toàn bộ dữ liệu của các client
+hiện có về máy chủ. Thứ ba, mô hình toàn cục có thể học từ nhiều nguồn dữ liệu khác nhau, qua đó
+khai thác sự đa dạng của dữ liệu phân tán.
+
+Tuy nhiên, học liên kết cũng tồn tại nhiều thách thức. Dữ liệu giữa các client thường không độc lập
+và cùng phân phối (Non-IID), do mỗi client có thể sở hữu dữ liệu với đặc điểm và tỷ lệ nhãn khác
+nhau. Sự khác biệt này có thể làm giảm tốc độ hội tụ hoặc ảnh hưởng đến chất lượng mô hình toàn
+cục. Ngoài ra, số lượng mẫu, năng lực tính toán và chất lượng kết nối mạng của các client có thể
+không đồng nhất, gây ảnh hưởng đến thời gian huấn luyện và quá trình điều phối.
+
+Một thách thức khác là tính bảo mật và độ tin cậy của các cập nhật mô hình. Mặc dù dữ liệu gốc
+không được truyền trực tiếp đến máy chủ, các tham số hoặc gradient được gửi đi vẫn có thể làm lộ
+thông tin trong một số điều kiện nhất định. Bên cạnh đó, client có thể gửi các cập nhật độc hại
+nhằm làm suy giảm chất lượng mô hình hoặc gây ra hành vi dự đoán sai. Các cuộc tấn công này thường
+được gọi là tấn công đầu độc mô hình (Model Poisoning) hoặc đầu độc dữ liệu (Data Poisoning).
+
+Trong hệ thống học liên kết, máy chủ điều phối cũng có thể trở thành một thành phần cần được xem
+xét về độ tin cậy. Nếu máy chủ không đáng tin cậy, quá trình phân phối mô hình, tổng hợp cập nhật
+hoặc ghi nhận lịch sử huấn luyện có thể bị thao túng. Vì vậy, việc bảo vệ dữ liệu cục bộ chỉ giải
+quyết một phần vấn đề bảo mật; hệ thống còn cần các cơ chế hỗ trợ kiểm tra tính toàn vẹn và truy
+xuất nguồn gốc của quá trình huấn luyện.
+
+\subsection{Ứng dụng học liên kết trong phát hiện lỗ hổng phần mềm}
+
+Trong nghiên cứu này, học liên kết được sử dụng để huấn luyện mô hình Devign trên dữ liệu mã nguồn
+được phân phối tại nhiều client. Mỗi client lưu trữ tập dữ liệu mã nguồn cục bộ, chuyển đổi các hàm
+mã nguồn thành đồ thị và thực hiện huấn luyện mô hình trên dữ liệu của mình. Các cập nhật mô hình
+được gửi đến máy chủ điều phối để tổng hợp bằng thuật toán FedAvg.
+
+Quá trình huấn luyện được thực hiện qua nhiều vòng. Ở mỗi vòng, máy chủ phân phối mô hình toàn cục
+hiện tại đến các client được lựa chọn. Các client huấn luyện mô hình trên dữ liệu cục bộ và gửi
+tham số mô hình đã cập nhật về máy chủ. Máy chủ tổng hợp các tham số này để tạo ra mô hình toàn cục
+mới, sau đó tiếp tục phân phối mô hình cho vòng huấn luyện tiếp theo.
+
+Việc áp dụng học liên kết giúp hệ thống khai thác dữ liệu mã nguồn từ nhiều client mà không cần tập
+trung toàn bộ mã nguồn về máy chủ. Tuy nhiên, để tăng khả năng truy xuất nguồn gốc và kiểm toán quá
+trình huấn luyện, nghiên cứu kết hợp cơ chế ghi nhận thông tin huấn luyện và lịch sử mô hình trên
+chuỗi khối Ethereum. Cơ chế này hỗ trợ kiểm tra các thông tin đã được ghi nhận trong quá trình huấn
+luyện, đồng thời tạo cơ sở để đánh giá chi phí và độ trễ phát sinh khi kết hợp học liên kết với
+chuỗi khối.
+
+\section{Chuỗi khối}
+
+\subsection{Khái niệm chuỗi khối}
+
+Chuỗi khối (Blockchain) là một dạng cơ sở dữ liệu phân tán, trong đó các bản ghi được tổ chức thành
+những khối và liên kết với nhau bằng các giá trị băm mật mã. Mỗi khối thường chứa dữ liệu giao
+dịch, thông tin thời gian và giá trị băm tham chiếu đến khối trước đó. Cấu trúc liên kết này giúp
+các nút trong mạng có thể kiểm tra tính nhất quán của lịch sử dữ liệu và phát hiện những thay đổi
+trái phép đối với các bản ghi đã được xác nhận.
+
+Khác với cơ sở dữ liệu tập trung truyền thống, blockchain duy trì trạng thái dữ liệu thông qua sự
+tham gia của nhiều nút trong mạng. Các nút thực hiện kiểm tra và đồng thuận về những khối mới được
+thêm vào chuỗi. Nhờ cơ chế này, blockchain cung cấp khả năng lưu trữ dữ liệu có tính minh bạch, khả
+năng kiểm chứng và khó bị thay đổi sau khi được xác nhận.
+
+Tuy nhiên, tính bất biến của blockchain không có nghĩa là dữ liệu được ghi nhận luôn chính xác hoặc
+đáng tin cậy. Blockchain có thể bảo vệ tính toàn vẹn của dữ liệu đã được ghi nhận, nhưng không tự
+xác minh tính đúng đắn của thông tin do người gửi cung cấp. Vì vậy, dữ liệu cần được kiểm tra trước
+khi ghi lên chuỗi và cơ chế xác thực cần được thiết kế phù hợp với yêu cầu của hệ thống.
+
+\subsection{Nguyên lý hoạt động của chuỗi khối}
+
+Một blockchain bao gồm các khối được liên kết theo thứ tự thời gian. Mỗi khối chứa một tập hợp giao
+dịch và thông tin tham chiếu đến khối trước đó. Giá trị băm của khối được tạo ra từ nội dung của
+khối, giúp phát hiện sự thay đổi dữ liệu trong quá trình kiểm tra tính toàn vẹn.
+
+Khi một giao dịch được gửi đến mạng blockchain, giao dịch sẽ được phát tán đến các nút tham gia
+mạng. Các nút kiểm tra tính hợp lệ của giao dịch trước khi giao dịch được đưa vào một khối. Sau khi
+khối được tạo và xác nhận theo cơ chế đồng thuận của mạng, trạng thái blockchain được cập nhật và
+các nút tiếp tục đồng bộ trạng thái mới.
+
+Đối với Ethereum, mạng sử dụng cơ chế đồng thuận Proof of Stake (PoS). Các validator tham gia xác thực và đề xuất khối dựa trên cơ chế staking và các quy tắc đồng thuận của giao thức. Cơ chế này giúp các nút trong mạng đạt được sự thống nhất về trạng thái và lịch sử giao dịch.
+
+Tính liên kết giữa các khối và cơ chế đồng thuận giúp blockchain cung cấp khả năng kiểm tra lịch sử
+giao dịch. Trong trường hợp dữ liệu của một khối bị thay đổi, giá trị băm và các tham chiếu liên
+quan sẽ không còn nhất quán với lịch sử đã được xác nhận. Điều này khiến việc sửa đổi dữ liệu đã
+ghi nhận trở nên khó khăn và có thể bị phát hiện bởi các nút tham gia mạng.
+
+\subsection{Ethereum}
+
+Ethereum là một nền tảng blockchain hỗ trợ thực thi các chương trình được gọi là hợp đồng thông
+minh (Smart Contract). Ngoài chức năng chuyển giao tài sản số, Ethereum cho phép triển khai các ứng
+dụng phi tập trung thông qua các hợp đồng được thực thi trên Ethereum Virtual Machine (EVM).
+
+Ethereum sử dụng tài khoản để quản lý trạng thái và thực hiện giao dịch. Mỗi tài khoản có một địa
+chỉ riêng và có thể được sử dụng để gửi giao dịch hoặc tương tác với hợp đồng thông minh. Đối với
+tài khoản do người dùng kiểm soát, giao dịch được ký bằng khóa riêng tương ứng. Địa chỉ tài khoản
+có thể được sử dụng để xác định tài khoản đã gửi giao dịch, nhưng không tự động xác định danh tính
+thực của người sở hữu tài khoản.
+
+Trong nghiên cứu này, Ethereum được sử dụng làm nền tảng blockchain để ghi nhận thông tin liên quan
+đến quá trình huấn luyện học liên kết. Việc sử dụng Ethereum cho phép hệ thống lưu trữ các bản ghi
+huấn luyện thông qua hợp đồng thông minh và kiểm tra lịch sử giao dịch dựa trên dữ liệu được xác
+nhận trên mạng.
+
+\subsection{Hợp đồng thông minh}
+
+Hợp đồng thông minh là chương trình được triển khai trên blockchain và có thể được thực thi khi
+nhận được giao dịch hợp lệ. Hợp đồng thông minh định nghĩa các trạng thái dữ liệu, hàm xử lý và
+điều kiện thực thi nhằm tự động hóa các quy tắc của hệ thống.
+
+Trong Ethereum, hợp đồng thông minh được triển khai tại một địa chỉ xác định và được thực thi trên
+EVM. Các hàm làm thay đổi trạng thái hợp đồng cần được gọi thông qua giao dịch và tiêu tốn phí gas.
+Ngược lại, các thao tác chỉ đọc trạng thái mà không làm thay đổi dữ liệu có thể được thực hiện
+thông qua cơ chế truy vấn mà không cần tạo giao dịch ghi mới.
+
+Hợp đồng thông minh có thể phát ra các sự kiện (Events) để thông báo về những thay đổi trạng thái.
+Các sự kiện được lưu trong transaction receipt và có thể được ứng dụng bên ngoài truy vấn hoặc theo
+dõi. Điều này giúp hệ thống xây dựng giao diện truy xuất lịch sử huấn luyện mà không cần liên tục
+đọc toàn bộ trạng thái hợp đồng.
+
+Trong hệ thống đề xuất, hợp đồng thông minh được sử dụng để ghi nhận thông tin của các lần huấn
+luyện mô hình. Các bản ghi được liên kết với địa chỉ client gửi giao dịch và thông tin phiên bản mô
+hình, hỗ trợ truy xuất lịch sử huấn luyện từ giao diện Web Platform.
+
+\subsection{Cơ chế truy xuất nguồn gốc mô hình}
+
+Truy xuất nguồn gốc mô hình (Model Provenance) là quá trình xác định nguồn gốc, lịch sử hình thành
+và các bước biến đổi của một mô hình học máy. Trong môi trường học liên kết, một mô hình toàn cục
+có thể được tạo ra từ nhiều lần huấn luyện cục bộ của các client khác nhau. Do đó, việc ghi nhận
+lịch sử mô hình giúp hệ thống xác định những client tham gia, cấu hình huấn luyện và quan hệ giữa
+các phiên bản mô hình.
+
+Một cơ chế truy xuất nguồn gốc có thể ghi nhận các thông tin như định danh mô hình, phiên bản mô
+hình trước đó, cấu hình huấn luyện, kết quả đánh giá, thời gian ghi nhận và địa chỉ tài khoản gửi
+giao dịch. Các thông tin này tạo thành metadata phục vụ việc kiểm tra và phân tích lịch sử huấn
+luyện.
+
+Trong nghiên cứu này, cơ chế ghi nhận metadata trên Ethereum được xây dựng dựa trên ý tưởng truy
+xuất nguồn gốc trong học liên kết. Hướng tiếp cận này có liên quan đến TrustFLow, một framework đề
+xuất sử dụng hạ tầng sổ cái phân tán, Decentralized Identifiers (DIDs) và Verifiable Credentials
+(VCs) để theo dõi nguồn gốc dữ liệu và quá trình phát triển mô hình học liên kết. TrustFLow còn đề
+cập đến việc đánh giá mức độ ảnh hưởng của dữ liệu và cơ chế thu hồi dữ liệu hoặc mô hình có vấn
+đề.
+
+Phạm vi triển khai của nghiên cứu này tập trung vào ghi nhận metadata huấn luyện và lịch sử mô hình
+trên Ethereum. Vì vậy, hệ thống tham khảo ý tưởng truy xuất nguồn gốc từ TrustFLow, nhưng không
+được xem là triển khai đầy đủ framework TrustFLow nếu chưa xây dựng các thành phần như DID, VC,
+influence estimation và cơ chế revocation.
+
+\subsection{Ứng dụng chuỗi khối trong hệ thống đề xuất}
+
+Trong hệ thống đề xuất, blockchain được tích hợp vào quy trình học liên kết nhằm hỗ trợ ghi nhận và
+truy xuất lịch sử huấn luyện mô hình phát hiện lỗ hổng phần mềm. Sau khi client hoàn thành quá
+trình huấn luyện cục bộ, hệ thống ghi nhận các thông tin liên quan đến lần huấn luyện và phiên bản
+mô hình trên hợp đồng thông minh Ethereum.
+
+Các thông tin được ghi nhận bao gồm:
+
+\begin{itemize}
+	\item \textbf{batchSize:} Kích thước batch được sử dụng trong quá trình huấn luyện cục bộ.
+	\item \textbf{learningRate:} Tốc độ học được sử dụng để cập nhật tham số mô hình.
+	\item \textbf{epoch:} Số epoch thực hiện trong lần huấn luyện cục bộ.
+	\item \textbf{accuracy:} Độ chính xác của mô hình theo kết quả đánh giá được hệ thống ghi nhận.
+	\item \textbf{prevModelId:} Định danh mô hình toàn cục mà client nhận được trước khi thực hiện huấn luyện.
+	\item \textbf{score:} Điểm đánh giá bổ sung của mô hình theo định nghĩa và công thức được sử dụng trong hệ thống.
+	\item \textbf{timestamp:} Thời điểm ghi nhận giao dịch trên blockchain, được biểu diễn theo Unix timestamp.
+	\item \textbf{owner:} Địa chỉ Ethereum của tài khoản gửi giao dịch ghi nhận thông tin huấn luyện.
+\end{itemize}
+
+Các metadata này giúp liên kết một lần huấn luyện với client thực hiện, cấu hình huấn luyện và
+phiên bản mô hình đầu vào. Thông qua lịch sử giao dịch và dữ liệu của hợp đồng thông minh, hệ thống
+có thể truy xuất các bản ghi đã được xác nhận để hỗ trợ kiểm toán và phân tích quá trình huấn
+luyện.
+
+Việc ghi nhận metadata trên blockchain cũng tạo ra chi phí và độ trễ bổ sung do các giao dịch cần
+được gửi, thực thi và xác nhận trên mạng. Vì vậy, nghiên cứu tiến hành so sánh hệ thống học liên
+kết thông thường với hệ thống học liên kết kết hợp blockchain nhằm đánh giá ảnh hưởng của cơ chế
+ghi nhận đến thời gian thực thi và chi phí giao dịch.
+
+\subsection{Giới hạn và vấn đề bảo mật}
+
+Blockchain cung cấp khả năng kiểm tra tính toàn vẹn và truy xuất lịch sử dữ liệu đã ghi nhận, nhưng
+không tự động bảo đảm rằng các cập nhật mô hình được gửi bởi client là trung thực. Một client có
+thể gửi cập nhật bị đầu độc hoặc metadata không phản ánh chính xác quá trình huấn luyện thực tế.
+Nếu hợp đồng thông minh chỉ ghi nhận thông tin do client cung cấp mà không có cơ chế xác minh độc
+lập, blockchain vẫn có thể lưu trữ một bản ghi không chính xác nhưng khó bị sửa đổi.
+
+Ngoài ra, việc sử dụng địa chỉ Ethereum làm định danh client chưa đủ để ngăn chặn tấn công Sybil.
+Một người tham gia có thể tạo nhiều ví blockchain khác nhau và sử dụng chúng để giả lập nhiều
+client độc lập. Do đó, địa chỉ ví chỉ xác định tài khoản gửi giao dịch, không chứng minh rằng mỗi
+địa chỉ tương ứng với một thực thể hoặc một client độc lập.
+
+Để giảm thiểu các rủi ro này, hệ thống cần phân biệt giữa xác thực giao dịch, xác minh metadata và đánh giá chất lượng cập nhật mô hình. Trong phạm vi nghiên cứu, blockchain được sử dụng như một cơ chế hỗ trợ truy xuất nguồn gốc và kiểm toán, không thay thế các phương pháp phát hiện hoặc giảm thiểu tấn công trong học liên kết.
+
+\section{Các nghiên cứu liên quan}
+
+\subsection{Nghiên cứu về phát hiện lỗ hổng phần mềm dựa trên học sâu}
+
+Zhou và cộng sự \cite{zhou2019devign} đề xuất Devign, một mô hình phát hiện lỗ hổng phần mềm dựa
+trên mạng nơ-ron đồ thị. Công trình biểu diễn mã nguồn dưới dạng đồ thị ngữ nghĩa tổng hợp, kết hợp
+thông tin cú pháp, luồng điều khiển và phụ thuộc dữ liệu. Mô hình sử dụng Gated Graph Neural
+Network để học biểu diễn các nút trong đồ thị, đồng thời đề xuất một mô-đun tích chập nhằm khai
+thác các đặc trưng phục vụ phân loại toàn đồ thị. Devign được đánh giá trên các tập dữ liệu mã
+nguồn C được thu thập từ nhiều dự án mã nguồn mở và cho thấy hiệu quả trong bài toán phát hiện lỗ
+hổng ở cấp độ hàm. Công trình này cung cấp nền tảng quan trọng cho hướng tiếp cận sử dụng GNN để
+học đặc trưng ngữ nghĩa của mã nguồn.
+
+Liu và cộng sự \cite{liu2025vul-lmgnn} đề xuất Vul-LMGNNs, một phương pháp kết hợp mô hình ngôn ngữ
+mã nguồn và mạng nơ-ron đồ thị trong phát hiện lỗ hổng. Công trình sử dụng học chưng cất tri thức
+trực tuyến nhằm kết hợp đặc trưng từ biểu diễn tuần tự của mã nguồn và biểu diễn đồ thị. Phương
+pháp này khai thác đồng thời thông tin cú pháp, luồng điều khiển và phụ thuộc dữ liệu, cho thấy xu
+hướng kết hợp nhiều dạng biểu diễn nhằm cải thiện khả năng học ngữ nghĩa chương trình.
+
+Nhìn chung, các nghiên cứu dựa trên học sâu và GNN cho thấy khả năng khai thác cấu trúc mã nguồn để
+phát hiện lỗ hổng. Tuy nhiên, phần lớn các phương pháp này tập trung vào kiến trúc mô hình và hiệu
+quả dự đoán trên dữ liệu huấn luyện được cung cấp cho quá trình học. Vấn đề huấn luyện trên dữ liệu
+mã nguồn phân tán giữa nhiều tổ chức, cũng như khả năng truy xuất nguồn gốc các cập nhật mô hình
+trong quá trình huấn luyện, cần được xem xét thêm.
+
+\subsection{Nghiên cứu về phát hiện lỗ hổng phần mềm sử dụng học liên kết}
+
+Nghiên cứu ``Vulnerability detection based on federated learning'' \cite{zhang2024vul-fl} đề xuất
+framework VDBFL nhằm giải quyết vấn đề dữ liệu mã nguồn phân tán giữa nhiều bên. Công trình sử dụng
+Code Property Graph để biểu diễn mã nguồn, kết hợp GNN và CNN làm bộ trích xuất đặc trưng. Ngoài
+ra, mô hình sử dụng Graph Attention Network để tổng hợp thông tin từ các nút lân cận quan trọng.
+Giai đoạn học liên kết được xây dựng theo hướng học liên kết ngang, cho phép các client huấn luyện
+mô hình trên dữ liệu cục bộ và kết hợp các cập nhật nhằm cải thiện khả năng phát hiện lỗ hổng mà
+không cần tập trung dữ liệu gốc.
+
+VDBFL là một nghiên cứu gần với đề tài này vì đã kết hợp phát hiện lỗ hổng phần mềm, biểu diễn mã
+nguồn bằng đồ thị và học liên kết. Công trình cho thấy học liên kết có thể được tích hợp vào các
+phương pháp phát hiện lỗ hổng ở cấp độ hàm để hỗ trợ khai thác dữ liệu từ nhiều nguồn phân tán. Tuy
+nhiên, trọng tâm của VDBFL là xây dựng và đánh giá framework phát hiện lỗ hổng dựa trên học liên
+kết, trong khi vấn đề truy xuất nguồn gốc và kiểm toán lịch sử huấn luyện bằng blockchain không
+phải là trọng tâm chính được trình bày trong công trình.
+
+Một hướng nghiên cứu khác là FedVuln \cite{tran2026fedvuln}, đề xuất framework học đồ thị liên kết
+nhằm phát hiện lỗ hổng trong hợp đồng thông minh. Công trình hướng đến việc huấn luyện cộng tác
+giữa các tổ chức mà không cần công khai mã nguồn độc quyền, đồng thời xem xét khả năng mở rộng và
+bảo vệ quyền riêng tư trong hệ thống phân tán. Tuy nhiên, đối tượng của FedVuln là lỗ hổng hợp đồng
+thông minh, khác với phạm vi phát hiện lỗ hổng phần mềm ở cấp độ hàm mã nguồn tổng quát trong
+nghiên cứu này.
+
+Các công trình trên cho thấy học liên kết là một hướng tiếp cận phù hợp để giải quyết vấn đề dữ
+liệu mã nguồn phân tán trong phát hiện lỗ hổng phần mềm. Tuy nhiên, việc kết hợp học liên kết với
+cơ chế ghi nhận lịch sử mô hình và truy xuất nguồn gốc quá trình huấn luyện vẫn là một khía cạnh
+cần được nghiên cứu và đánh giá trong hệ thống cụ thể.
+
+\subsection{Nghiên cứu về truy xuất nguồn gốc học liên kết sử dụng chuỗi khối}
+
+Romandini và cộng sự \cite{romandini2026trustflow} đề xuất TrustFLow, một framework truy xuất nguồn
+gốc học liên kết nhằm hỗ trợ xây dựng các Digital Twin đáng tin cậy. TrustFLow sử dụng hạ tầng sổ
+cái phân tán kết hợp Decentralized Identifiers (DIDs) và Verifiable Credentials (VCs) để theo dõi
+nguồn gốc dữ liệu và quá trình phát triển mô hình. Framework còn đề xuất cơ chế ước lượng mức độ
+ảnh hưởng của dữ liệu hoặc các bên tham gia đối với mô hình toàn cục, đồng thời hỗ trợ thu hồi dữ
+liệu và mô hình bị đánh giá là có vấn đề.
+
+TrustFLow có liên quan trực tiếp đến hướng nghiên cứu truy xuất nguồn gốc trong học liên kết. Công
+trình cho thấy việc kết hợp distributed ledger với các cơ chế định danh và xác thực có thể hỗ trợ
+theo dõi quá trình hình thành mô hình và tăng khả năng kiểm toán. Tuy nhiên, TrustFLow được xây
+dựng trong bối cảnh Digital Twin và hướng đến một framework quản trị toàn diện, trong khi nghiên
+cứu này tập trung vào ứng dụng phát hiện lỗ hổng phần mềm và triển khai cơ chế ghi nhận metadata
+huấn luyện trên Ethereum.
+
+Một số nghiên cứu khác cũng xem xét việc sử dụng blockchain để kiểm toán các cập nhật mô hình trong
+học liên kết. Chẳng hạn, Mehammed \cite{mehammed2025blockchainauditedfl} đề xuất framework học liên
+kết được kiểm toán bằng blockchain, trong đó dữ liệu nguồn gốc và thông tin kiểm toán cập nhật mô
+hình được tổ chức thành các kênh riêng biệt. Công trình kết hợp Hyperledger Fabric với TensorFlow
+Federated và đánh giá chi phí phát sinh khi bổ sung cơ chế kiểm toán. Hướng tiếp cận này cho thấy
+blockchain có thể được tích hợp vào quy trình học liên kết để hỗ trợ ghi nhận và kiểm tra lịch sử
+cập nhật mô hình.
+
+Những nghiên cứu trên cung cấp cơ sở cho việc sử dụng blockchain nhằm tăng cường khả năng truy xuất
+nguồn gốc và kiểm toán trong học liên kết. Tuy nhiên, hiệu quả và chi phí của cơ chế ghi nhận phụ
+thuộc vào nền tảng blockchain, dữ liệu được lưu trữ và cách tích hợp vào quy trình huấn luyện. Vì
+vậy, cần đánh giá thực nghiệm trên hệ thống phát hiện lỗ hổng phần mềm cụ thể để xác định mức độ
+ảnh hưởng của blockchain đến thời gian thực thi và chi phí vận hành.
+
+\subsection{So sánh các nghiên cứu liên quan}
+
+Các công trình được khảo sát có những mục tiêu và phạm vi khác nhau, được tổng hợp trong Bảng
+\ref{tab:related-work}.
+
+\begin{table}[htbp]
+	\centering
+	\caption{So sánh các nghiên cứu liên quan}
+	\label{tab:related-work}
+	\small
+	\begin{tabularx}{\textwidth}{|l|X|X|X|}
+		\hline
+		\textbf{Công trình}          & \textbf{Bài toán chính}                                             & \textbf{Phương pháp}                     & \textbf{Đóng góp liên quan}                                                         \\
+		\hline
+		Devign (2019)                & Phát hiện lỗ hổng phần mềm                                          & GNN, đồ thị ngữ nghĩa mã nguồn           & Nền tảng mô hình phát hiện lỗ hổng ở cấp độ hàm                                     \\
+		\hline
+		VDBFL (2024)                 & Phát hiện lỗ hổng trên dữ liệu phân tán                             & CPG, GNN, CNN, học liên kết ngang        & Kết hợp phát hiện lỗ hổng với học liên kết                                          \\
+		\hline
+		FedVuln (2026)               & Phát hiện lỗ hổng hợp đồng thông minh                               & Học đồ thị liên kết                      & Học cộng tác trên dữ liệu hợp đồng thông minh phân tán                              \\
+		\hline
+		TrustFLow (2026)             & Truy xuất nguồn gốc và quản trị FL                                  & Distributed Ledger, DID, VC              & Theo dõi nguồn gốc dữ liệu và quá trình phát triển mô hình                          \\
+		\hline
+		Blockchain-Audited FL (2025) & Kiểm toán cập nhật mô hình FL                                       & Hyperledger Fabric, TensorFlow Federated & Ghi nhận provenance và kiểm toán cập nhật mô hình                                   \\
+		\hline
+		\textbf{Nghiên cứu này}      & \textbf{Phát hiện lỗ hổng phần mềm trong FL có truy xuất nguồn gốc} & \textbf{Devign, FedAvg, Ethereum}        & \textbf{Kết hợp phát hiện lỗ hổng, huấn luyện phân tán và ghi nhận lịch sử mô hình} \\
+		\hline
+	\end{tabularx}
+\end{table}
+
+Từ bảng so sánh, có thể nhận thấy các nghiên cứu trước đã đề cập đến những thành phần quan trọng
+của đề tài, bao gồm phát hiện lỗ hổng bằng GNN, huấn luyện mô hình trên dữ liệu phân tán và truy
+xuất nguồn gốc trong học liên kết. Tuy nhiên, các công trình có sự khác biệt về mục tiêu, kiến trúc
+mô hình, nền tảng blockchain và phạm vi đánh giá.
+
+\subsection{Khoảng trống nghiên cứu và định hướng đề tài}
+
+Từ việc khảo sát các công trình liên quan, nghiên cứu xác định một số vấn đề cần tiếp tục xem xét.
+
+Thứ nhất, các mô hình phát hiện lỗ hổng dựa trên GNN như Devign tập trung vào việc học đặc trưng
+ngữ nghĩa mã nguồn và nâng cao hiệu quả phân loại. Trong khi đó, các nghiên cứu như VDBFL đã mở
+rộng hướng tiếp cận này sang môi trường học liên kết. Nghiên cứu này lựa chọn Devign làm kiến trúc
+phát hiện lỗ hổng và triển khai quá trình huấn luyện trong môi trường học liên kết, nhằm khảo sát
+khả năng sử dụng mô hình trên dữ liệu mã nguồn phân tán.
+
+Thứ hai, các framework truy xuất nguồn gốc học liên kết như TrustFLow hướng đến quản trị và theo
+dõi quá trình hình thành mô hình. Nghiên cứu này tập trung vào một phạm vi triển khai cụ thể hơn,
+sử dụng Ethereum để ghi nhận metadata của các lần huấn luyện, bao gồm cấu hình huấn luyện, kết quả
+đánh giá, định danh mô hình trước đó, thời gian ghi nhận và địa chỉ client gửi giao dịch. Cách tiếp
+cận này nhằm hỗ trợ truy xuất lịch sử huấn luyện và kiểm tra các bản ghi đã được xác nhận trên
+blockchain.
+
+Thứ ba, việc tích hợp blockchain vào học liên kết có thể làm phát sinh chi phí giao dịch và độ trễ
+bổ sung. Vì vậy, ngoài việc xây dựng hệ thống phát hiện lỗ hổng phần mềm, nghiên cứu tiến hành đánh
+giá thực nghiệm bằng cách so sánh học liên kết thông thường với học liên kết kết hợp blockchain.
+Các tiêu chí đánh giá bao gồm hiệu quả phát hiện lỗ hổng, thời gian thực thi và chi phí phát sinh
+do cơ chế ghi nhận trên blockchain.
+
+Từ các vấn đề trên, đề tài hướng đến xây dựng một hệ thống phát hiện lỗ hổng phần mềm sử dụng mô
+hình Devign được huấn luyện bằng học liên kết, kết hợp cơ chế ghi nhận metadata và lịch sử mô hình
+trên Ethereum. Đóng góp của nghiên cứu tập trung vào việc triển khai và đánh giá sự kết hợp giữa
+các thành phần này trong một hệ thống cụ thể, thay vì đề xuất một kiến trúc GNN mới hoặc một
+framework quản trị học liên kết toàn diện. ```
